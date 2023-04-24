@@ -1,13 +1,15 @@
 import './App.css';
 import styled from 'styled-components';
-
+import Subject from './Subject';
+import FileContent from './FileContent';
+import data from './data.json'
 function App() {
   return (
     <Wrapper >
      <Head>
       <LoadBtn>파일 불러오기</LoadBtn>
-      <FileName>선택한 파일 명: ㅁㅇㅁㄴㅇasdsadsadsa</FileName>
-      <Subject>주제:</Subject>
+      <FileName>파일 명: {data.fileName}</FileName>
+      <Subject/>
      </Head>
 
      <Contents>
@@ -24,7 +26,7 @@ function App() {
 
       </FileWrapper>
 
-      <FileContent></FileContent>
+      <FileContent/>
      
       <ActionBtn>
         <MergeBtn>병합하기</MergeBtn>
@@ -48,14 +50,14 @@ const Wrapper = styled.div`
 const Head = styled.div`
   display:flex;
   align-items:center;
-  padding-left:35px;
-  padding-right:40px;
+  padding-left:28px;
+  padding-right:10px;
   margin-bottom:20px;
   justify-content: space-between;
 `
 
 const LoadBtn = styled.button`
-  width: 200px;
+  width: 220px;
   height:70px;
   font-size: 24px;
   font-weight:bold;
@@ -69,7 +71,6 @@ const FileName = styled.div`
   font-size:25px;
 `
 
-const Subject = styled.div``
 
 const Contents = styled.div`
   display: flex;
@@ -77,8 +78,7 @@ const Contents = styled.div`
 `
 const FileWrapper = styled.div`
   width: 20%;
-  
-  height: 700px;
+  height: 722px;
   display: flex;
 
   flex-direction:column;
@@ -89,16 +89,6 @@ const FileListWrapper = styled.div`
   flex-direction:column;
 `
 
-const FileContent = styled.div`
-  width: 65%;
-  margin-left:15px;
-  margin-right:18px;
-  border: black;
-  border: 0.5px solid gray;
-  height: 700px;
-  overflow: scroll;
-  background: #EFEFEF;
-`
 const FileListName = styled.div`
   width: 100%;
   font-size:24px;
@@ -114,7 +104,7 @@ const FileListName = styled.div`
 const FieList = styled.div`
   width: 100%;
   margin: 0 auto;
-  height: 540px;
+  height: 580px;
   overflow: scroll;
   background: #EFEFEF;
 `
