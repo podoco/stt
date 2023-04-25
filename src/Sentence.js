@@ -1,7 +1,7 @@
 import React, { useState }  from 'react'
 import styled from 'styled-components';
-import { faPlay,faPause } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Datagrid from './Datagrid';
+import AudioPlayer from './AudioPlayer';
 
 const intent = [
     {title:"DES"},
@@ -14,12 +14,20 @@ const emotion = [
     {title:"negative"},
     {title:"positive"},
 ];
-
-
+const calculateTime = (time) => {
+    const seconds = Number(time.split(':')[2]); // 초 추출
+    const minutes = Number(time.split(':')[1]); // 분 추출
+    const hours = Number(time.split(':')[0]); // 시간 추출
+    return (hours * 3600 + minutes * 60 + seconds).toFixed(2);
+};
 
 export default function Sentence({number,data}) {
 const [intentTitle,setIntentTitle] = useState(data.annotation.intents[number].tagType);
 const [emotionTitle,setEmotionTitle] = useState(data.annotation.emotions[number].tagType);
+const startTime = calculateTime(data.transcription.sentences[number].startTime);
+const endTime = calculateTime(data.transcription.sentences[number].endTime);
+
+
 
 const handleIntentChange = ({ target }) => {
     const index = target.options.selectedIndex;
@@ -36,9 +44,9 @@ const handleIntentChange = ({ target }) => {
     <List>
         <Head>
         {number}
-        <StyledFontAwesomeIcon icon={faPlay} />
-        <StyledFontAwesomeIcon icon={faPause} />
-        0.005
+        <AudioPlayer startTime={startTime} endTime={endTime}/>
+
+        {startTime}초
         Intent:
         <select
         onChange={handleIntentChange}
@@ -64,9 +72,7 @@ const handleIntentChange = ({ target }) => {
         ))}
         </select>
         </Head>
-        <Table>
-
-        </Table>
+       {/* <Datagrid/> */}
     </List>
   )
 }
@@ -81,17 +87,7 @@ const List = styled.div`
     background: lightgray;
     
 `
-const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
-  color: white;
-  width: 25px;
-  height: 15px;
-  background: gray;
-  padding: 10px;
-  border-radius:10px;
-  margin-left:15px;
-  margin-right:5px;
-  font-size: 20px;
-`;
+
 const Head = styled.div`
     display: flex;
     padding: 10px;

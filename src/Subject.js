@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
-
+import data from './data.json'
 const subjects = [
     {title:"농경"},
     {title:"가족"},
@@ -15,7 +15,7 @@ const subjects = [
 
 
 function Subject() {
-    const [SubTitle,setSubTitle] = useState(subjects[0].title1);
+    const [SubTitle,setSubTitle] = useState(data.script.domain);
 
     const handleChange = ({ target }) => {
         const index = target.options.selectedIndex;
