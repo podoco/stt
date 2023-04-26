@@ -39,13 +39,8 @@ class AudioPlayer extends React.Component {
         <audio ref={this.audioRef} >
           <source src="/sample.wav" type="audio/wav" />
         </audio>
-        <button onClick={this.playAudio}>
-        <StyledFontAwesomeIcon icon={faPlay} />
-        </button>
-        <button onClick={this.pauseAudio}>
-        <StyledFontAwesomeIcon icon={faPause} />
-        </button>
-       
+        <StyledFontAwesomeIcon icon={faPlay} onClick={this.playAudio}/>
+        <StyledFontAwesomeIcon icon={faPause}  onClick={this.pauseAudio} />
       </div>
     );
   }

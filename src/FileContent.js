@@ -8,6 +8,7 @@ export default function FileContent() {
     <Wrapper>
         {data.transcription.sentences.map((_, index)  =>(
             <Sentence
+            key={index}
             number={index}
             data ={data}
             />

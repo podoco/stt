@@ -4,15 +4,15 @@ import Datagrid from './Datagrid';
 import AudioPlayer from './AudioPlayer';
 
 const intent = [
-    {title:"DES"},
-    {title:"EXP"},
-    {title:"REP"},
+    {title:"DES", id:1},
+    {title:"EXP", id:2},
+    {title:"REP", id:3},
 ];
 
 const emotion = [
-    {title:"irrelevant"},
-    {title:"negative"},
-    {title:"positive"},
+    {title:"irrelevant",id:1},
+    {title:"negative",id:2},
+    {title:"positive",id:3},
 ];
 const calculateTime = (time) => {
     const seconds = Number(time.split(':')[2]); // 초 추출
@@ -53,8 +53,8 @@ const handleIntentChange = ({ target }) => {
         value={intentTitle}
         id="intent-select"
         >
-        {intent.map(({ title }) => (
-            <option>
+        {intent.map(({ title,id }) => (
+            <option key={id}>
                 {title}
             </option>
         ))}
@@ -65,8 +65,8 @@ const handleIntentChange = ({ target }) => {
         value={emotionTitle}
         id="emotion-select"
         >
-        {emotion.map(({ title }) => (
-            <option>
+        {emotion.map(({ title ,id }) => (
+            <option key={id}>
                 {title}
             </option>
         ))}

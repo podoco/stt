@@ -2,15 +2,15 @@ import React, { useState } from 'react'
 import styled from 'styled-components';
 import data from './data.json'
 const subjects = [
-    {title:"농경"},
-    {title:"가족"},
-    {title:"의"},
-    {title:"식"},
-    {title:"주"},
-    {title:"자연"},
-    {title:"건강"},
-    {title:"풍속"},
-    {title:"응급상황"}
+    {title:"농경",id:1},
+    {title:"가족" ,id:2},
+    {title:"의",id:3},
+    {title:"식",id:4},
+    {title:"주",id:5},
+    {title:"자연",id:6},
+    {title:"건강",id:7},
+    {title:"풍속",id:8},
+    {title:"응급상황",id:9}
 ];
 
 
@@ -34,8 +34,8 @@ function Subject() {
         value={SubTitle}
         id="variation-select"
     >
-        {subjects.map(({ title }) => (
-            <option>
+        {subjects.map(({ title,id }) => (
+            <option key={id}>
                 {title}
             </option>
         ))}
