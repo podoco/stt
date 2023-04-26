@@ -6,13 +6,13 @@ import data from './data.json'
 function App() {
   return (
     <Wrapper >
-     <Head>
-      <LoadBtn>파일 불러오기</LoadBtn>
-      <FileName>파일 명: {data.fileName}</FileName>
-      <Subject/>
-     </Head>
+      <Head>
+        <LoadBtn>파일 불러오기</LoadBtn>
+        <FileName>파일 명: {data.fileName}</FileName>
+        <Subject/>
+      </Head>
 
-     <Contents>
+    <Contents>
       <FileWrapper>
         <FileListWrapper>
           <FileListName>파일목록</FileListName>
@@ -40,8 +40,8 @@ function App() {
 }
 
 const Wrapper = styled.div`
-  width:65%;
-  height: 50%;
+  width:85%;
+  height: 100%;
   margin: 30px auto;
   display: flex;
   flex-direction:column;
@@ -50,8 +50,8 @@ const Wrapper = styled.div`
 const Head = styled.div`
   display:flex;
   align-items:center;
-  padding-left:28px;
-  padding-right:10px;
+  padding-left:60px;
+  padding-right:80px;
   margin-bottom:20px;
   justify-content: space-between;
 `
@@ -70,15 +70,13 @@ const LoadBtn = styled.button`
 const FileName = styled.div`
   font-size:25px;
 `
-
-
 const Contents = styled.div`
   display: flex;
   margin-top:5px;
 `
 const FileWrapper = styled.div`
-  width: 20%;
-  height: 722px;
+  width: 18%;
+  height: 920px;
   display: flex;
 
   flex-direction:column;
@@ -104,7 +102,7 @@ const FileListName = styled.div`
 const FieList = styled.div`
   width: 100%;
   margin: 0 auto;
-  height: 580px;
+  height: 700px;
   overflow: scroll;
   background: #EFEFEF;
 `
@@ -120,7 +118,7 @@ const ListBtn = styled.div`
   
 `
 const PrevBtn = styled.button`
-  width: 85px;
+  width: 120px;
   height: 76px;
   cursor: pointer;
   font-size: 28px;
@@ -130,7 +128,7 @@ const PrevBtn = styled.button`
 `
 
 const NextBtn = styled.button`
-  width: 85px;
+  width: 120px;
   height: 76px;
   font-size: 28px;
   cursor: pointer;

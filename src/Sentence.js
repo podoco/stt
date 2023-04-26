@@ -24,10 +24,10 @@ const calculateTime = (time) => {
 export default function Sentence({number,data}) {
 const [intentTitle,setIntentTitle] = useState(data.annotation.intents[number].tagType);
 const [emotionTitle,setEmotionTitle] = useState(data.annotation.emotions[number].tagType);
+const orgStartTime =(data.transcription.sentences[number].startTime);
+const orgEndTime =(data.transcription.sentences[number].endTime);
 const startTime = calculateTime(data.transcription.sentences[number].startTime);
 const endTime = calculateTime(data.transcription.sentences[number].endTime);
-
-
 
 const handleIntentChange = ({ target }) => {
     const index = target.options.selectedIndex;
@@ -43,42 +43,47 @@ const handleIntentChange = ({ target }) => {
   return (
     <List>
         <Head>
-        {number}
-        <AudioPlayer startTime={startTime} endTime={endTime}/>
-
-        {startTime}초
-        Intent:
-        <select
-        onChange={handleIntentChange}
-        value={intentTitle}
-        id="intent-select"
-        >
-        {intent.map(({ title,id }) => (
-            <option key={id}>
-                {title}
-            </option>
-        ))}
-        </select>
-        emotion:
-        <select
-        onChange={handleEmotionChange}
-        value={emotionTitle}
-        id="emotion-select"
-        >
-        {emotion.map(({ title ,id }) => (
-            <option key={id}>
-                {title}
-            </option>
-        ))}
-        </select>
+            <span style={{display:"flex"}}>
+                {number}
+                <AudioPlayer startTime={startTime} endTime={endTime}/>
+                {startTime}~{endTime}초
+            </span>
+            <Span>
+                <label htmlFor="intent-select">Intent:</label>
+                <Select
+                onChange={handleIntentChange}
+                value={intentTitle}
+                id="intent-select"
+                >
+                {intent.map(({ title,id }) => (
+                    <option key={id}>
+                        {title}
+                    </option>
+                ))}
+                </Select>
+            </Span>
+            <Span>
+                emotion:
+                <Select
+                onChange={handleEmotionChange}
+                value={emotionTitle}
+                id="emotion-select"
+                >
+                {emotion.map(({ title ,id }) => (
+                    <option key={id}>
+                        {title}
+                    </option>
+                ))}
+                </Select>
+            </Span>
         </Head>
-       {/* <Datagrid/> */}
+       <Datagrid  startTime={orgStartTime} endTime={orgEndTime}/>
     </List>
   )
 }
 const List = styled.div`
     width: 95%;
-    height: 300px;
+    height: 490px;
     padding: 20px;
     margin-top:10px;
     margin-left:10px;
@@ -87,15 +92,28 @@ const List = styled.div`
     background: lightgray;
     
 `
-
 const Head = styled.div`
     display: flex;
     padding: 10px;
     font-size:30px;
     justify-content:space-between;
 `
-
-const Table = styled.div`
-    display: flex;
-    padding: 10px;
+const Span = styled.span`
+    display:flex;
+    flex-direction: row;
+    align-items: center;
 `
+const Select = styled.select`
+width: 180px;
+  height: 30px;
+  font-size: 18px;
+  text-align:center;
+  align-items:center;
+  justify-content:center;
+  margin-left:10px;
+  margin-top:3.5px;
+  appearance: none; /* 기본 드롭다운 UI를 제거합니다. */
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='blue'><polygon points='0,0 10,0 5,5'/></svg>") white no-repeat; /* 파란색 화살표 이미지를 배경으로 추가합니다. */
+  background-position: right 10px center; /* 화살표 이미지 위치를 우측 정렬하고, 가운데로 위치하도록 설정합니다. */
+  padding-right: 10px; /* 화살표 이미지가 너무 붙어있는 것을 방지하기 위해 padding을 추가합니다. */
+`;
