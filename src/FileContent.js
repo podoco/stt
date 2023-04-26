@@ -8,6 +8,7 @@ export default function FileContent() {
     <Wrapper>
         {data.transcription.sentences.map((_, index)  =>(
             <Sentence
+            key={index}
             number={index}
             data ={data}
             />
@@ -24,7 +25,7 @@ const Wrapper = styled.div`
   gap:30px;
   border: black;
   border: 0.5px solid gray;
-  height: 700px;
+  height: 900px;
   overflow: scroll;
   background: #EFEFEF;
 `
