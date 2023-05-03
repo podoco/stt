@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components';
-import data from './data.json'
 import Sentence from './Sentence';
 
-export default function FileContent() {
+export default function FileContent({data,setNewData}) {
   return (
     <Wrapper>
         {data.transcription.sentences.map((_, index)  =>(
@@ -11,6 +10,7 @@ export default function FileContent() {
             key={index}
             number={index}
             data ={data}
+            setNewData={setNewData} 
             />
         ))}
     </Wrapper>

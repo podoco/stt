@@ -21,24 +21,26 @@ const calculateTime = (time) => {
     return (hours * 3600 + minutes * 60 + seconds).toFixed(2);
 };
 
-export default function Sentence({number,data}) {
-const [intentTitle,setIntentTitle] = useState(data.annotation.intents[number].tagType);
-const [emotionTitle,setEmotionTitle] = useState(data.annotation.emotions[number].tagType);
+export default function Sentence({number,data,setNewData}) {
+const intentTitle= data.annotation;
 const orgStartTime =(data.transcription.sentences[number].startTime);
 const orgEndTime =(data.transcription.sentences[number].endTime);
 const startTime = calculateTime(data.transcription.sentences[number].startTime);
 const endTime = calculateTime(data.transcription.sentences[number].endTime);
 
-const handleIntentChange = ({ target }) => {
+
+const handleTagTypeChange = (target,prop)=>{
     const index = target.options.selectedIndex;
-    const { title } = intent[index];
-    setIntentTitle(title);
-  };
-  const handleEmotionChange = ({ target }) => {
-    const index = target.options.selectedIndex;
-    const { title } = emotion[index];
-    setEmotionTitle(title);
-  };
+    const {title} = prop === 'intents' ? intent[index]: emotion[index];
+    setNewData(prevState => {
+        const script ={...prevState};
+        const tags =[...script.annotation[prop]]
+        tags[number].tagType = title;
+        script.annotation = {...script.annotation, [prop]:tags};
+        return {...prevState,script};
+    });
+};
+
 
   return (
     <List>
@@ -51,8 +53,8 @@ const handleIntentChange = ({ target }) => {
             <Span>
                 <label htmlFor="intent-select">Intent:</label>
                 <Select
-                onChange={handleIntentChange}
-                value={intentTitle}
+                onChange={e => handleTagTypeChange(e.target,'intents')}
+                value={intentTitle.intents[number].tagType}
                 id="intent-select"
                 >
                 {intent.map(({ title,id }) => (
@@ -65,8 +67,8 @@ const handleIntentChange = ({ target }) => {
             <Span>
                 emotion:
                 <Select
-                onChange={handleEmotionChange}
-                value={emotionTitle}
+                onChange={e => handleTagTypeChange(e.target, 'emotions')}
+                value={intentTitle.emotions[number].tagType}
                 id="emotion-select"
                 >
                 {emotion.map(({ title ,id }) => (

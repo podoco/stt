@@ -1,19 +1,43 @@
 import './App.css';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Subject from './Subject';
 import FileContent from './FileContent';
+import ActionBtn from './ActionBtn';
 import data from './data.json'
 function App() {
+
+  const [newData, setNewData] = useState(data);
+  const [SubTitle,setSubTitle] = useState(data.script.domain);
+
+  const SavehandleClick = () => {
+ 
+    const updatedData = { ...newData, script: { 
+      domain: SubTitle, 
+      transcription: data.transcription,
+      annotation: {
+        intents: data.annotation.intents.map(({ tagType }) => ({ tagType })),
+        emotions: data.annotation.emotions.map(({ tagType }) => ({ tagType })),
+      }, } };
+
+    setNewData(updatedData);
+    
+    console.log('File saved: ', updatedData);
+  }
+
+
+
   return (
     <Wrapper >
       <Head>
         <LoadBtn>파일 불러오기</LoadBtn>
         <FileName>파일 명: {data.fileName}</FileName>
-        <Subject/>
+        <Subject SubTitle={SubTitle} setSubTitle={setSubTitle} data={data}/>
       </Head>
 
     <Contents>
       <FileWrapper>
+
         <FileListWrapper>
           <FileListName>파일목록</FileListName>
           <FieList></FieList>
@@ -26,13 +50,9 @@ function App() {
 
       </FileWrapper>
 
-      <FileContent/>
+      <FileContent setNewData={setNewData} data={data}/>
      
-      <ActionBtn>
-        <MergeBtn>병합하기</MergeBtn>
-        <AddBtn>오른쪽에 추가</AddBtn>
-        <SaveBtn>파일저장</SaveBtn>
-      </ActionBtn>
+      <ActionBtn onClick={SavehandleClick}/>
      
      </Contents>
     </Wrapper>
@@ -137,43 +157,4 @@ const NextBtn = styled.button`
   border-radius: 15px;
 `
 
-
-const ActionBtn = styled.button`
-  width: 15%;
-  display: flex;
-  gap:13px;
-  align-items:center;
-  flex-direction:column;
-`
-const MergeBtn = styled.button`
-  width: 150px;
-  height:60px;
-  cursor: pointer;
-  margin-top:15px;
-  font-size: 20px;
-  font-weight:bold;
-  background-color:#0174DF;
-  border-radius: 15px;
-  color:white;
-`
-const AddBtn = styled.button`
-  width: 150px;
-  height:60px;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight:bold;
-  background-color:#0174DF;
-  border-radius: 15px;
-  color:white;
-`
-const SaveBtn = styled.button`
-  width: 150px;
-  height:60px;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight:bold;
-  background-color:#0174DF;
-  border-radius: 15px;
-  color:white;
-`
 export default App;
