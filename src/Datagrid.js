@@ -27,7 +27,6 @@ export default function Datagrid({startTime,endTime}) {
     rows[3][i+1] = (segments[i].startTime); // startTime
     rows[4][i+1] = (segments[i].endTime); // endTime
   }
-
   const columns = [
     { field: 'id', headerName: '/', width: 130 },
   ];
