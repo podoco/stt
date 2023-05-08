@@ -48,7 +48,7 @@ const handleTagTypeChange = (target,prop)=>{
             <span style={{display:"flex"}}>
                 {number}
                 <AudioPlayer startTime={startTime} endTime={endTime}/>
-                {startTime}~{endTime}초
+                {/* <Time>{startTime}~{endTime}초</Time> */}
             </span>
             <Span>
                 <label htmlFor="intent-select">Intent:</label>
@@ -104,6 +104,10 @@ const Span = styled.span`
     display:flex;
     flex-direction: row;
     align-items: center;
+`
+const Time = styled.div`
+    font-size:20px;
+    margin-top:10px;
 `
 const Select = styled.select`
 width: 180px;

@@ -7,9 +7,12 @@ class AudioPlayer extends React.Component {
   constructor(props) {
     super(props);
     this.audioRef = React.createRef();
+    this.state = {
+      pausedTime: null,
+      currentTime:0,
+    };
     this.playAudio = this.playAudio.bind(this);
     this.pauseAudio = this.pauseAudio.bind(this);
-
   }
 
   playAudio() {
@@ -17,34 +20,44 @@ class AudioPlayer extends React.Component {
     if (!startTime || !endTime) {
       this.audioRef.current.play();
     } else {
-      this.audioRef.current.currentTime = startTime;
+      const currentTime = this.state.pausedTime || startTime;
+      this.audioRef.current.currentTime = currentTime;
       this.audioRef.current.play();
       this.audioRef.current.addEventListener("timeupdate", () => {
         if (this.audioRef.current.currentTime >= endTime) {
           this.audioRef.current.pause();
           this.audioRef.current.currentTime = startTime;
         }
+        this.setState({
+          currentTime: this.audioRef.current.currentTime,
+        });
       });
-      alert('play');
     }
   }
 
   pauseAudio() {
+    this.setState({
+      pausedTime: this.audioRef.current.currentTime,
+    });
     this.audioRef.current.pause();
   }
-
   render() {
+    const { currentTime } = this.state;
     return (
-      <div>
+      <AudioWrapper>
         <audio ref={this.audioRef} >
           <source src="/sample.wav" type="audio/wav" />
         </audio>
         <StyledFontAwesomeIcon icon={faPlay} onClick={this.playAudio}/>
         <StyledFontAwesomeIcon icon={faPause}  onClick={this.pauseAudio} />
-      </div>
+         <Time>{currentTime.toFixed(2)}</Time>
+      </AudioWrapper>
     );
   }
 }
+const AudioWrapper = styled.div`
+  display: flex;
+`
 const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   color: white;
   width: 25px;
@@ -56,4 +69,13 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   margin-right:5px;
   font-size: 20px;
 `;
+const Time = styled.span`
+  width: 60px;
+  height: 31px;
+  background-color:white;
+  font-size:26px;
+  margin-top:3px;
+  margin-left:3px;
+  padding: 3px;
+`
 export default AudioPlayer;
