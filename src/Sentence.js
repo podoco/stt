@@ -21,12 +21,22 @@ const calculateTime = (time) => {
     return (hours * 3600 + minutes * 60 + seconds).toFixed(2);
 };
 
+
 export default function Sentence({number,data,setNewData}) {
 const intentTitle= data.annotation;
-const orgStartTime =(data.transcription.sentences[number].startTime);
-const orgEndTime =(data.transcription.sentences[number].endTime);
 const startTime = calculateTime(data.transcription.sentences[number].startTime);
 const endTime = calculateTime(data.transcription.sentences[number].endTime);
+let wordCount = 0;
+for (let i = 0; i < number; i++) {
+  const sentence = data.transcription.sentences[i];
+  wordCount += sentence.dialect.split(" ").length;
+}
+let wordCountEnd =-1;
+for (let i = 0; i <= number; i++) {
+    const sentence = data.transcription.sentences[i];
+    wordCountEnd += sentence.dialect.split(" ").length;
+  }
+
 
 
 const handleTagTypeChange = (target,prop)=>{
@@ -46,7 +56,7 @@ const handleTagTypeChange = (target,prop)=>{
     <List>
         <Head>
             <span style={{display:"flex"}}>
-                {number}
+                {number}//{wordCount}//{wordCountEnd}
                 <AudioPlayer startTime={startTime} endTime={endTime}/>
                 {/* <Time>{startTime}~{endTime}초</Time> */}
             </span>
@@ -79,7 +89,7 @@ const handleTagTypeChange = (target,prop)=>{
                 </Select>
             </Span>
         </Head>
-       <Datagrid  startTime={orgStartTime} endTime={orgEndTime}/>
+       <Datagrid wordCountStart={wordCount} wordCountEnd={wordCountEnd} setNewData={setNewData}/>
     </List>
   )
 }
