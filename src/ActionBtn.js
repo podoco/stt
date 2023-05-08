@@ -16,8 +16,6 @@ const Wrapper = styled.div`
   gap: 13px;
   align-items: center;
   flex-direction: column;
-  background-color: rgb(239, 239, 239);
-  border: 1px black solid;
 `;
 const MergeBtn = styled.button`
   width: 150px;
