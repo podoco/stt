@@ -35,8 +35,6 @@ export default function Datagrid({wordCountStart,wordCountEnd,setNewData}) {
   for (let i = wordCountStart; i < wordCountEnd+1; i++) {
     columns.push({ field: `${i}`,width: 150, editable: true });
   }
- 
-    const [unsavedData, setUnsavedData] = useState(newData);
 
   const handleEditCellChange = (params) => {
     // // 수정된 셀 데이터를 unsavedData에 저장
