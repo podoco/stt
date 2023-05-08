@@ -70,12 +70,12 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   font-size: 20px;
 `;
 const Time = styled.span`
-  width: 60px;
-  height: 31px;
+  width: 64px;
+  height: 34px;
   background-color:white;
   font-size:26px;
-  margin-top:3px;
-  margin-left:3px;
-  padding: 3px;
+  margin-left:6px;
+  padding-left: 8px;
+  border-radius:10px;
 `
 export default AudioPlayer;
