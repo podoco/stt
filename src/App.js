@@ -132,7 +132,8 @@ function App() {
     if (files.length !== 0) {
       setPrevIndex(0);
       FileReaderLoad(0);
-      ChangeSelectedItemStyle(0, 0);
+      let prev = prevIndex ? prevIndex : 0;
+      ChangeSelectedItemStyle(prev, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
