@@ -29,7 +29,7 @@ export default function Datagrid({data,setNewData,startTime,endTime}) {
   ]);
 
   useEffect(() => {
-    console.log('뉴데이터',data.transcription.segments); 
+ 
     const newRows = [
       { id: "standard"},
       { id: "dialect"},

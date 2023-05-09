@@ -8,7 +8,6 @@ import ActionBtn from "./ActionBtn";
 function App() {
   const [data, setData] = useState();
   const [newData, setNewData] = useState(data);
-  const [SubTitle, setSubTitle] = useState();
   const [files, setFiles] = useState([]);
   const [prevIndex, setPrevIndex] = useState();
   const fileReader = new FileReader();
@@ -16,9 +15,9 @@ function App() {
 
   const SaveHandleClick = () => {
     const updatedData = {
-      ...newData,
+      ...data,
       script: {
-        domain: SubTitle,
+        domain: data.script.domain,
         transcription: data.transcription,
         annotation: {
           intents: data.annotation.intents.map(({ tagType }) => ({ tagType })),
@@ -28,7 +27,7 @@ function App() {
         },
       },
     };
-    setNewData(updatedData);
+    setData(updatedData);
     console.log("File saved: ", updatedData);
   };
 
@@ -121,7 +120,6 @@ function App() {
     fileReader.addEventListener("load", (e) => {
       let loadData = JSON.parse(fileReader.result);
       setData(loadData);
-      setSubTitle(loadData.fileName);
     });
     fileReader.readAsText(files[index]["json"]);
   };
@@ -149,7 +147,7 @@ function App() {
           ></LoadInput>
         </LoadFilesWrapper>
         <FileName>파일 명: {data && data.fileName}</FileName>
-        <Subject SubTitle={SubTitle} setSubTitle={setSubTitle} />
+        <Subject data={data} setData={setData} />
       </Head>
 
       <Contents>
@@ -177,7 +175,7 @@ function App() {
           </ListBtn>
         </FileWrapper>
 
-        <FileContent setNewData={setNewData} data={data} />
+        <FileContent setData={setData} data={data} />
 
         <ActionBtn onClick={SaveHandleClick} />
       </Contents>
