@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Subject from "./Subject";
 import FileContent from "./FileContent";
 import ActionBtn from "./ActionBtn";
-// import data from "./data.json";
+
 function App() {
   const [data, setData] = useState();
   const [newData, setNewData] = useState(data);
@@ -28,9 +28,7 @@ function App() {
         },
       },
     };
-
     setNewData(updatedData);
-
     console.log("File saved: ", updatedData);
   };
 

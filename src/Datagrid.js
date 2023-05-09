@@ -1,10 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import styled from 'styled-components';
-import data from './data.json'
 
-export default function Datagrid({wordCountStart,wordCountEnd,setNewData}) {
-  const segments = data.transcription.segments
+
+export default function Datagrid({data,setNewData,startTime,endTime}) {
+
+
+  const segments = data.transcription.segments.filter(segment => {
+    const segmentStartTime = (segment.startTime);
+    const segmentEndTime = (segment.endTime);
+    return segmentStartTime >= startTime && segmentEndTime <= endTime;
+  });
+  const segmentsLength = segments.length;
+
+
   const gridRef = useRef(null);
   const [selectionState, setSelectionState] = useState({ selectedRowIndex: null, selectedCellIndex: null });
   
@@ -15,26 +24,39 @@ export default function Datagrid({wordCountStart,wordCountEnd,setNewData}) {
     { id: "startTime"},
     { id: "endTime"},
   ]);
-  // useEffect(() => {
-  //   console.log('뉴데이터',newData.transcription.segments); // selectionState 변경 시 로그 출력
-  // }, []);
-  
-  for (let i = wordCountStart; i < wordCountEnd+1; i++) {
-    rows[0][i] = segments[i].standard;  // standard
-    rows[1][i] = segments[i].dialect; // dialect
-    rows[2][i] = segments[i].pronunciation; // pronunciation
-    rows[3][i] = (segments[i].startTime); // startTime
-    rows[4][i] = (segments[i].endTime); // endTime
-  }
-
   const [columns, setColumns] = useState([
     { field: 'id', headerName: '/', width: 130 },
   ]);
 
-
-  for (let i = wordCountStart; i < wordCountEnd+1; i++) {
-    columns.push({ field: `${i}`,width: 150, editable: true });
-  }
+  useEffect(() => {
+    console.log('뉴데이터',data.transcription.segments); 
+    const newRows = [
+      { id: "standard"},
+      { id: "dialect"},
+      { id: "pronunciation"},
+      { id: "startTime"},
+      { id: "endTime"},
+    ];
+    const newColumns = [
+      { field: 'id', headerName: '/', width: 130 },
+    ];
+  
+    for (let i = 0; i < segmentsLength; i++) {
+      newRows[0][i+1] = segments[i].standard;  // standard
+      newRows[1][i+1] = segments[i].dialect; // dialect
+      newRows[2][i+1] = segments[i].pronunciation; // pronunciation
+      newRows[3][i+1] = (segments[i].startTime); // startTime
+       newRows[4][i+1] = (segments[i].endTime); // endTime
+    }
+  
+    for (let i = 0; i < segmentsLength; i++) {
+       newColumns.push({ field: `${i+1}`,width: 150, editable: true });
+    }
+  
+    setRows(newRows);
+    setColumns(newColumns);
+  }, [data]);
+  
 
   const handleEditCellChange = (params) => {
     // // 수정된 셀 데이터를 unsavedData에 저장
