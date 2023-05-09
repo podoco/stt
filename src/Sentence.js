@@ -23,7 +23,7 @@ const calculateTime = (time) => {
 };
 
 
-export default function Sentence({number,data,setNewData}) {
+export default function Sentence({number,data,setData}) {
 const intentTitle= data.annotation;
 const startTime = calculateTime(data.transcription.sentences[number].startTime);
 const endTime = calculateTime(data.transcription.sentences[number].endTime);
@@ -34,7 +34,7 @@ const orgEndTime =(data.transcription.sentences[number].endTime);
 const handleTagTypeChange = (target,prop)=>{
     const index = target.options.selectedIndex;
     const {title} = prop === 'intents' ? intent[index]: emotion[index];
-    setNewData(prevState => {
+    setData(prevState => {
         const script ={...prevState};
         const tags =[...script.annotation[prop]]
         tags[number].tagType = title;
@@ -81,7 +81,7 @@ const handleTagTypeChange = (target,prop)=>{
                 </Select>
             </Span>
         </Head>
-       <Datagrid data={data} setNewData={setNewData} startTime={orgStartTime} endTime={orgEndTime}/>
+       <Datagrid data={data} setData={setData} number={number} startTime={orgStartTime} endTime={orgEndTime}/>
     </List>
   )
 }
