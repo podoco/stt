@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 const subjects = [
   { title: "농경", id: 1 },
@@ -11,16 +12,30 @@ const subjects = [
   { title: "응급상황", id: 9 },
 ];
 
-function Subject({ SubTitle, setSubTitle }) {
+function Subject({ data,setData }) {
+
+  const subject = data?.script?.domain;
+
   const handleChange = ({ target }) => {
     const index = target.options.selectedIndex;
     const { title } = subjects[index];
-    setSubTitle(title);
+
+    setData(prevState =>{
+    const newData = { ...prevState };
+    const newScript = { ...newData.script };
+      newScript.domain = title;
+      newData.script = newScript;
+    return newData;
+    });
   };
+
 
   return (
     <Wrapper>
-      <Select onChange={handleChange} value={SubTitle} id="variation-select">
+      <Select 
+      onChange={handleChange} 
+      value={subject} 
+      id="variation-select">
         {subjects.map(({ title, id }) => (
           <option key={id}>{title}</option>
         ))}
