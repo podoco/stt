@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Sentence from "./Sentence";
 
-export default function FileContent({ data, setNewData }) {
+export default function FileContent({ data, setData }) {
   return (
     <Wrapper>
       {data &&
@@ -11,7 +11,7 @@ export default function FileContent({ data, setNewData }) {
             key={index}
             number={index}
             data={data}
-            setNewData={setNewData}
+            setData={setData}
           />
         ))}
     </Wrapper>

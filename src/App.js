@@ -7,7 +7,6 @@ import ActionBtn from "./ActionBtn";
 
 function App() {
   const [data, setData] = useState();
-  const [newData, setNewData] = useState(data);
   const [files, setFiles] = useState([]);
   const [prevIndex, setPrevIndex] = useState();
   const fileReader = new FileReader();
@@ -28,7 +27,7 @@ function App() {
       },
     };
     setData(updatedData);
-    console.log("File saved: ", updatedData);
+    console.log("File saved: ", updatedData.transcription.segments);
   };
 
   const LoadHandleChange = (event) => {
