@@ -15,6 +15,7 @@ const emotion = [
     {title:"positive",id:3},
 ];
 const calculateTime = (time) => {
+    
     const seconds = Number(time.split(':')[2]); // 초 추출
     const minutes = Number(time.split(':')[1]); // 분 추출
     const hours = Number(time.split(':')[0]); // 시간 추출
@@ -26,17 +27,8 @@ export default function Sentence({number,data,setNewData}) {
 const intentTitle= data.annotation;
 const startTime = calculateTime(data.transcription.sentences[number].startTime);
 const endTime = calculateTime(data.transcription.sentences[number].endTime);
-let wordCount = 0;
-for (let i = 0; i < number; i++) {
-  const sentence = data.transcription.sentences[i];
-  wordCount += sentence.dialect.split(" ").length;
-}
-let wordCountEnd =-1;
-for (let i = 0; i <= number; i++) {
-    const sentence = data.transcription.sentences[i];
-    wordCountEnd += sentence.dialect.split(" ").length;
-  }
-
+const orgStartTime =(data.transcription.sentences[number].startTime);
+const orgEndTime =(data.transcription.sentences[number].endTime);
 
 
 const handleTagTypeChange = (target,prop)=>{
@@ -56,7 +48,7 @@ const handleTagTypeChange = (target,prop)=>{
     <List>
         <Head>
             <span style={{display:"flex"}}>
-                {number}//{wordCount}//{wordCountEnd}
+                {number}
                 <AudioPlayer startTime={startTime} endTime={endTime}/>
                 {/* <Time>{startTime}~{endTime}초</Time> */}
             </span>
@@ -89,7 +81,7 @@ const handleTagTypeChange = (target,prop)=>{
                 </Select>
             </Span>
         </Head>
-       <Datagrid wordCountStart={wordCount} wordCountEnd={wordCountEnd} setNewData={setNewData}/>
+       <Datagrid data={data} setNewData={setNewData} startTime={orgStartTime} endTime={orgEndTime}/>
     </List>
   )
 }
