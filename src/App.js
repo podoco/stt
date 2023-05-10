@@ -1,4 +1,4 @@
-import "./App.css";
+import "./css/App.css";
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Subject from "./Subject";
