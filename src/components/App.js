@@ -1,11 +1,11 @@
-import "./css/App.css";
+import "../css/App.css";
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Subject from "./Subject";
 import FileContent from "./FileContent";
 import ActionBtn from "./ActionBtn";
 import { useRecoilState } from "recoil";
-import { dataState } from "./store";
+import { dataState } from "../store";
 
 function App() {
   const [data, setData] = useRecoilState(dataState);

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { dataState } from "./store";
+import { dataState } from "../store";
 
 const subjects = [
   { title: "농경", id: 1 },

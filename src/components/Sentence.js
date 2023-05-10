@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Datagrid from "./Datagrid";
 import AudioPlayer from "./AudioPlayer";
 import { useRecoilState } from "recoil";
-import { dataState } from "./store";
+import { dataState } from "../store";
 
 const intent = [
   { title: "DES", id: 1 },

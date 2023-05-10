@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Sentence from "./Sentence";
 import { useRecoilState } from "recoil";
-import { dataState } from "./store";
+import { dataState } from "../store";
 
 export default function FileContent() {
   const [data] = useRecoilState(dataState);

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { dataState } from "./store";
+import { dataState } from "../store";
 
 export default function Datagrid({ lengd, dash }) {
   const [data, setData] = useRecoilState(dataState);
