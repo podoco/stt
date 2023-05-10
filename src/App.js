@@ -13,21 +13,15 @@ function App() {
   const itemRef = useRef(null);
 
   const SaveHandleClick = () => {
-    const updatedData = {
-      ...data,
-      script: {
-        domain: data.script.domain,
-        transcription: data.transcription,
-        annotation: {
-          intents: data.annotation.intents.map(({ tagType }) => ({ tagType })),
-          emotions: data.annotation.emotions.map(({ tagType }) => ({
-            tagType,
-          })),
-        },
-      },
-    };
-    setData(updatedData);
-    console.log("File saved: ", updatedData.transcription.segments);
+      console.log(data);
+
+      const dataString = JSON.stringify(data);
+      const blob = new Blob([dataString], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download =`${data.fileName}.json`.replace(".json", "");
+      link.href = url;
+      link.click();
   };
 
   const LoadHandleChange = (event) => {
