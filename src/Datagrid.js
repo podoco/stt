@@ -3,19 +3,13 @@ import { DataGrid } from '@material-ui/data-grid';
 import styled from 'styled-components';
 
 
-export default function Datagrid({data,setNewData,startTime,endTime}) {
+export default function Datagrid({data,setData,lengd,dash}) {
 
-
-  const segments = data.transcription.segments.filter(segment => {
-    const segmentStartTime = (segment.startTime);
-    const segmentEndTime = (segment.endTime);
-    return segmentStartTime >= startTime && segmentEndTime <= endTime;
-  });
-  const segmentsLength = segments.length;
-
+  const segments = data.transcription.segments
+  const segmentsLength = lengd;
 
   const gridRef = useRef(null);
-  const [selectionState, setSelectionState] = useState({ selectedRowIndex: null, selectedCellIndex: null });
+  const [selectionState, setSelectionState] = useState({ selectedRowIndex: null, selectedCellIndex: null, value:null });
   
   const [rows, setRows] = useState([
     { id: "standard"},
@@ -41,16 +35,16 @@ export default function Datagrid({data,setNewData,startTime,endTime}) {
       { field: 'id', headerName: '/', width: 130 },
     ];
   
-    for (let i = 0; i < segmentsLength; i++) {
-      newRows[0][i+1] = segments[i].standard;  // standard
-      newRows[1][i+1] = segments[i].dialect; // dialect
-      newRows[2][i+1] = segments[i].pronunciation; // pronunciation
-      newRows[3][i+1] = (segments[i].startTime); // startTime
-       newRows[4][i+1] = (segments[i].endTime); // endTime
+    for (let i = dash; i < dash+ segmentsLength; i++) {
+      newRows[0][i] = segments[i].standard;  // standard
+      newRows[1][i] = segments[i].dialect; // dialect
+      newRows[2][i] = segments[i].pronunciation; // pronunciation
+      newRows[3][i] = (segments[i].startTime); // startTime
+      newRows[4][i] = (segments[i].endTime); // endTime
     }
   
-    for (let i = 0; i < segmentsLength; i++) {
-       newColumns.push({ field: `${i+1}`,width: 150, editable: true });
+    for (let i = dash; i < dash+segmentsLength; i++) {
+       newColumns.push({ field: `${i}`,width: 150, editable: true });
     }
   
     setRows(newRows);
@@ -59,69 +53,60 @@ export default function Datagrid({data,setNewData,startTime,endTime}) {
   
 
   const handleEditCellChange = (params) => {
-    // // 수정된 셀 데이터를 unsavedData에 저장
-    // setUnsavedData(prevData => {
-    //   const newData = { ...prevData };
-    //   newData[params.id] = { ...newData[params.id], [params.field]: params.value };
-    //   return newData;
-    // });
+    console.log(params);
+    const { id, field, value } = params;
+    console.log('y',id,field,value);
+
+    setData((prevData) => {
+      const newData = { ...prevData };
+      const [number, i] = field.split('_');
+      
+      newData.transcription.segments[number].dialect = value;
+      return newData;
+    });
   }
 
   const handleAddColumn = (index) => {
     const newColumns = [...columns];
-    const newColumnIndex = index;
-    const newRows =[...rows];
-  
+    const newRows = [...rows];
+   
+    const [number, i] = index.split('_');
+    const newField = `${number}_${parseInt(i, 10) + 1}`;
+
+    console.log(newField);
     // 새로운 열 추가
+    const insertIndex = newColumns.findIndex((column) => column.field === index) + 1;
+    console.log('인덱스',insertIndex);
+    newColumns.splice(insertIndex, 0, { field: newField, width: 150, editable: true });
   
-    newColumns.splice(newColumnIndex, 0, { field:index, width: 150, editable: true });
-     setColumns(newColumns);
-     setRows(newRows);
-
-    //예시
-    // setNewData(prevState => {
-    //   const script = {...prevState};
-    //   const data = [...script.transcription.segments]
-    //   data[0].dialect = 'dkdk';
-    //   script.transcription.segments = data;
-    //   return {...prevState , script}
-    // });
-
+    setColumns(newColumns);
+    setRows(newRows);
   };
 
   // getCell 메소드를 사용하여 선택한 셀의 위치를 확인합니다.
   const handleCellClick = (params, event) => {
-    const { row, colDef } = params;
-    console.log(`Selected row: ${row.id}, column: ${colDef.field}`);
+    const { row, colDef,value } = params;
+    console.log('클릭시',`row: ${row.id}, column: ${colDef.field} value:${value}`);
     setSelectionState({ selectedRowIndex: row.id, selectedCellIndex: colDef.field });
   };
 
-  // // 셀에서 떠날때 디버깅
-  // const handleCellBlur = (params) => {
-  //   console.log('선택자',params.field - wordCountStart);
-  //   console.log('파람id',params.id);
-  //   console.log('파람value',params.value);
-  //   console.log('아아아',newData.transcription.segments[1]);
-  // };
+  // 셀에서 떠날때 디버깅
+  const handleCellBlur = (params) => {
+    console.log('그 전 셀에 있는 것','field:',params.field, 'id:',params.id,'value:',params.value);
+    const { id, field, value } = params;
 
-  // const Save = () => {
-  //   // unsavedData를 newData에 덮어쓰기
-  //   setNewData(prevData => {
-  //     const script = { ...prevData };
-  //     const data = [...script.transcription.segments];
- 
-  //     for (const id in unsavedData) {
-  //       const segmentIndex = unsavedData[id].index - wordCountStart;
-  //       data[segmentIndex].dialect = unsavedData[id].dialect;
-  //     }
-  
-  //     script.transcription.segments = data;
-  //     return { ...prevData, script };
-  //   });
-  
-  //   // unsavedData 초기화
-  //   setUnsavedData(null);
-  // };
+    // setData((prevData) => {
+    //   const newData = { ...prevData };
+    //   const [number, i] = field.split('_');
+      
+    //   newData.transcription.segments[number].dialect = value;
+    //   return newData;
+    // });
+  };
+
+  const Save = () => {
+
+  };
 
     return (
       <Wrapper>
@@ -132,11 +117,10 @@ export default function Datagrid({data,setNewData,startTime,endTime}) {
             onCellClick={handleCellClick}
             cellMode // 셀 선택 모드 활성화
             onEditCellChange={handleEditCellChange} 
-            // onCellBlur={handleCellBlur}
+            onCellBlur={handleCellBlur}
           />
-
-          <button onClick={() => handleAddColumn(parseInt(selectionState.selectedCellIndex)+1)}>Add</button>
-          {/* <button onClick={Save}>save</button> */}
+          <button onClick={() => handleAddColumn((selectionState.selectedCellIndex))}>Add</button>
+          <button onClick={Save}>save</button>
       </Wrapper>
     );
 }

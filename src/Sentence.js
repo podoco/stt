@@ -23,13 +23,13 @@ const calculateTime = (time) => {
 };
 
 
-export default function Sentence({number,data,setData}) {
+export default function Sentence({number,data,setData,dash,lengd}) {
+
 const intentTitle= data.annotation;
 const startTime = calculateTime(data.transcription.sentences[number].startTime);
 const endTime = calculateTime(data.transcription.sentences[number].endTime);
 const orgStartTime =(data.transcription.sentences[number].startTime);
 const orgEndTime =(data.transcription.sentences[number].endTime);
-
 
 const handleTagTypeChange = (target,prop)=>{
     const index = target.options.selectedIndex;
@@ -81,7 +81,7 @@ const handleTagTypeChange = (target,prop)=>{
                 </Select>
             </Span>
         </Head>
-       <Datagrid data={data} setData={setData} number={number} startTime={orgStartTime} endTime={orgEndTime}/>
+       <Datagrid data={data} setData={setData}  lengd={lengd[number]} dash={dash[number]}/>
     </List>
   )
 }
