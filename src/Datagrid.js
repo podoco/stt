@@ -24,6 +24,7 @@ export default function Datagrid({ data, setData, lengd, dash }) {
     { field: "id", headerName: "/", width: 130 },
   ]);
   const [selectedCols, setSelectedCols] = useState([]);
+  const [fisrtSelected, setFirstSelected] = useState({});
 
   useEffect(() => {
     const newRows = [
@@ -71,7 +72,7 @@ export default function Datagrid({ data, setData, lengd, dash }) {
   };
 
   const handleAddColumn = (index) => {
-    console.log(index);
+    if (index === null) return;
     const newColumns = [...columns];
     const newRows = [...rows];
 
