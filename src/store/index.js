@@ -5,6 +5,11 @@ export const dataState = atom({
   default: {},
 });
 
+export const filesState = atom({
+  key: "files",
+  default: [],
+});
+
 export const selectedColsState = atom({
   key: "selectedCols",
   default: {},
