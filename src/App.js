@@ -4,24 +4,15 @@ import styled from "styled-components";
 import Subject from "./Subject";
 import FileContent from "./FileContent";
 import ActionBtn from "./ActionBtn";
+import { useRecoilState } from "recoil";
+import { dataState } from "./store";
 
 function App() {
-  const [data, setData] = useState();
+  const [data, setData] = useRecoilState(dataState);
   const [files, setFiles] = useState([]);
   const [prevIndex, setPrevIndex] = useState();
   const fileReader = new FileReader();
   const itemRef = useRef(null);
-
-  const SaveHandleClick = () => {
-    // console.log(data);
-    const dataString = JSON.stringify(data);
-    const blob = new Blob([dataString], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.download = `${data.fileName}.json`.replace(".json", "");
-    link.href = url;
-    link.click();
-  };
 
   const handleLoadChange = (event) => {
     let uploads = event.target.files;
@@ -139,7 +130,7 @@ function App() {
           ></LoadInput>
         </LoadFilesWrapper>
         <FileName>파일 명: {data && data.fileName}</FileName>
-        <Subject data={data} setData={setData} />
+        <Subject />
       </Head>
 
       <Contents>
@@ -167,9 +158,9 @@ function App() {
           </ListBtn>
         </FileWrapper>
 
-        <FileContent setData={setData} data={data} />
+        <FileContent />
 
-        <ActionBtn onClick={SaveHandleClick} />
+        <ActionBtn />
       </Contents>
     </Wrapper>
   );

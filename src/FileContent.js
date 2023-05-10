@@ -1,8 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import Sentence from "./Sentence";
+import { useRecoilState } from "recoil";
+import { dataState } from "./store";
 
-export default function FileContent({ data, setData }) {
+export default function FileContent() {
+  const [data] = useRecoilState(dataState);
   const leng = data?.transcription?.sentences?.length || 0;
   const dash = [0];
   const lengd = [];
@@ -26,15 +29,9 @@ export default function FileContent({ data, setData }) {
   return (
     <Wrapper>
       {data &&
+        data.transcription &&
         data.transcription.sentences.map((_, index) => (
-          <Sentence
-            key={index}
-            number={index}
-            data={data}
-            setData={setData}
-            dash={dash}
-            lengd={lengd}
-          />
+          <Sentence key={index} number={index} dash={dash} lengd={lengd} />
         ))}
     </Wrapper>
   );

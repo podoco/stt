@@ -1,5 +1,7 @@
-import { useEffect } from "react";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { dataState } from "./store";
+
 const subjects = [
   { title: "농경", id: 1 },
   { title: "가족", id: 2 },
@@ -12,30 +14,26 @@ const subjects = [
   { title: "응급상황", id: 9 },
 ];
 
-function Subject({ data,setData }) {
-
+function Subject() {
+  const [data, setData] = useRecoilState(dataState);
   const subject = data?.script?.domain;
 
   const handleChange = ({ target }) => {
     const index = target.options.selectedIndex;
     const { title } = subjects[index];
 
-    setData(prevState =>{
-    const newData = { ...prevState };
-    const newScript = { ...newData.script };
+    setData((prevState) => {
+      const newData = { ...prevState };
+      const newScript = { ...newData.script };
       newScript.domain = title;
       newData.script = newScript;
-    return newData;
+      return newData;
     });
   };
 
-
   return (
     <Wrapper>
-      <Select 
-      onChange={handleChange} 
-      value={subject} 
-      id="variation-select">
+      <Select onChange={handleChange} value={subject} id="variation-select">
         {subjects.map(({ title, id }) => (
           <option key={id}>{title}</option>
         ))}

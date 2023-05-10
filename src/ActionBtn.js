@@ -1,12 +1,26 @@
 import React from "react";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { dataState } from "./store";
 
-export default function ActionBtn(props) {
+export default function ActionBtn() {
+  const [data] = useRecoilState(dataState);
+
+  const handleSaveClick = () => {
+    const dataString = JSON.stringify(data, null, 4);
+    const blob = new Blob([dataString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = `${data.fileName}.json`.replace(".json", "");
+    link.href = url;
+    link.click();
+  };
+
   return (
     <Wrapper>
       <MergeBtn>병합하기</MergeBtn>
       <AddBtn>오른쪽에 추가</AddBtn>
-      <SaveBtn onClick={props.onClick}>파일저장</SaveBtn>
+      <SaveBtn onClick={handleSaveClick}>파일저장</SaveBtn>
     </Wrapper>
   );
 }

@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { dataState } from "./store";
 
-export default function Datagrid({ data, setData, lengd, dash }) {
+export default function Datagrid({ lengd, dash }) {
+  const [data, setData] = useRecoilState(dataState);
   const segments = data.transcription.segments;
   const segmentsLength = lengd;
 
@@ -24,7 +27,6 @@ export default function Datagrid({ data, setData, lengd, dash }) {
     { field: "id", headerName: "/", width: 130 },
   ]);
   const [selectedCols, setSelectedCols] = useState([]);
-  const [fisrtSelected, setFirstSelected] = useState({});
 
   useEffect(() => {
     const newRows = [
@@ -98,7 +100,7 @@ export default function Datagrid({ data, setData, lengd, dash }) {
 
   // getCell 메소드를 사용하여 선택한 셀의 위치를 확인합니다.
   const handleCellClick = (params, event) => {
-    const { row, colDef, value } = params;
+    const { row, colDef } = params;
     // console.log(
     //   "클릭시",
     //   `row: ${row.id}, column: ${colDef.field} value:${value}`
@@ -107,6 +109,22 @@ export default function Datagrid({ data, setData, lengd, dash }) {
       selectedRowIndex: row.id,
       selectedCellIndex: colDef.field,
     });
+
+    if (params.field === "id") return;
+
+    if (!event.altKey) {
+      selectedCols.forEach((col) => {
+        col.colDef.cellClassName = "";
+      });
+      setSelectedCols([]);
+    } else {
+      const cols = [...selectedCols];
+      cols.push(params);
+      cols.forEach((col) => {
+        col.colDef.cellClassName = "selected";
+      });
+      setSelectedCols(cols);
+    }
   };
 
   // 셀에서 떠날때 디버깅
@@ -121,14 +139,6 @@ export default function Datagrid({ data, setData, lengd, dash }) {
     //   params.value
     // );
   };
-  const handleColumnHeaderClick = (params, event) => {
-    if (params.field === "id") return;
-    if (!event.shiftKey) {
-    } else {
-      params.colDef.cellClassName = "selected";
-      console.log(params);
-    }
-  };
 
   return (
     <Wrapper>
@@ -141,7 +151,6 @@ export default function Datagrid({ data, setData, lengd, dash }) {
         editable={true}
         onCellEditCommit={handleEditCellChange}
         onCellBlur={handleCellBlur}
-        onColumnHeaderClick={handleColumnHeaderClick}
       />
       <button onClick={() => handleAddColumn(selectionState.selectedCellIndex)}>
         Add
