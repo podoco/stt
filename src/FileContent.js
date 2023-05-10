@@ -4,17 +4,18 @@ import Sentence from "./Sentence";
 
 export default function FileContent({ data, setData }) {
   const leng = data?.transcription?.sentences?.length || 0;
-  const dash =[0];
-  const lengd=[];
+  const dash = [0];
+  const lengd = [];
   let accumulatedSegments = 0;
-  for (let i=0; i<leng; i++){
-    const orgStartTime =(data.transcription.sentences[i].startTime);
-    const orgEndTime =(data.transcription.sentences[i].endTime);
+  for (let i = 0; i < leng; i++) {
+    const orgStartTime = data.transcription.sentences[i].startTime;
+    const orgEndTime = data.transcription.sentences[i].endTime;
 
-    const segments = data.transcription.segments.filter((segment,index) => {
-      const segmentStartTime = (segment.startTime);
-      const segmentEndTime = (segment.endTime);
-      const isInTimeRange = segmentStartTime >= orgStartTime && segmentEndTime <= orgEndTime;
+    const segments = data.transcription.segments.filter((segment, index) => {
+      const segmentStartTime = segment.startTime;
+      const segmentEndTime = segment.endTime;
+      const isInTimeRange =
+        segmentStartTime >= orgStartTime && segmentEndTime <= orgEndTime;
       return isInTimeRange;
     });
     lengd.push(segments.length);
@@ -40,9 +41,8 @@ export default function FileContent({ data, setData }) {
 }
 
 const Wrapper = styled.div`
-  width: 65%;
-  margin-left: 15px;
-  margin-right: 18px;
+  width: 70%;
+  margin: 0px 10px;
   padding: 10px;
   gap: 30px;
   border: black;

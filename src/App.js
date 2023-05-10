@@ -13,18 +13,17 @@ function App() {
   const itemRef = useRef(null);
 
   const SaveHandleClick = () => {
-      console.log(data);
-
-      const dataString = JSON.stringify(data);
-      const blob = new Blob([dataString], {type: 'application/json'});
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download =`${data.fileName}.json`.replace(".json", "");
-      link.href = url;
-      link.click();
+    // console.log(data);
+    const dataString = JSON.stringify(data);
+    const blob = new Blob([dataString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = `${data.fileName}.json`.replace(".json", "");
+    link.href = url;
+    link.click();
   };
 
-  const LoadHandleChange = (event) => {
+  const handleLoadChange = (event) => {
     let uploads = event.target.files;
     let pairFiles = [];
     let pairRows = {};
@@ -57,7 +56,7 @@ function App() {
     setFiles([...pairFiles]);
   };
 
-  const ChangeSelectedItemStyle = (prev, current) => {
+  const changeSelectedItemStyle = (prev, current) => {
     let parent = itemRef.current;
     if (
       parent !== null &&
@@ -69,37 +68,37 @@ function App() {
     }
   };
 
-  const PrevHandleClick = () => {
+  const handlePrevClick = () => {
     if (prevIndex !== 0) {
       // 스타일 변경
 
       const currentIndex = prevIndex - 1;
-      ChangeSelectedItemStyle(prevIndex, currentIndex);
+      changeSelectedItemStyle(prevIndex, currentIndex);
 
       setPrevIndex(currentIndex);
-      FileReaderLoad(currentIndex);
+      fileReaderLoad(currentIndex);
     }
   };
 
-  const NextHandleClick = () => {
+  const handleNextClick = () => {
     if (prevIndex < files.length - 1) {
       // 스타일 변경
 
       const currentIndex = prevIndex + 1;
-      ChangeSelectedItemStyle(prevIndex, currentIndex);
+      changeSelectedItemStyle(prevIndex, currentIndex);
 
       setPrevIndex(currentIndex);
-      FileReaderLoad(currentIndex);
+      fileReaderLoad(currentIndex);
     }
   };
 
-  const FileHandleClick = (event) => {
+  const handleFileClick = (event) => {
     event.target.parentNode.childNodes[prevIndex].style.backgroundColor =
       "rgb(239, 239, 239)";
     event.target.style.backgroundColor = "rgb(220, 220, 220)";
-    let selectedIndex = event.target.getAttribute("data-key");
+    let selectedIndex = parseInt(event.target.getAttribute("data-key"));
     setPrevIndex(selectedIndex);
-    FileReaderLoad(selectedIndex);
+    fileReaderLoad(selectedIndex);
   };
 
   const _addDirectory = (node) => {
@@ -109,7 +108,7 @@ function App() {
     }
   };
 
-  const FileReaderLoad = (index) => {
+  const fileReaderLoad = (index) => {
     fileReader.addEventListener("load", (e) => {
       let loadData = JSON.parse(fileReader.result);
       setData(loadData);
@@ -120,9 +119,9 @@ function App() {
   useEffect(() => {
     if (files.length !== 0) {
       setPrevIndex(0);
-      FileReaderLoad(0);
+      fileReaderLoad(0);
       let prev = prevIndex ? prevIndex : 0;
-      ChangeSelectedItemStyle(prev, 0);
+      changeSelectedItemStyle(prev, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
@@ -135,7 +134,7 @@ function App() {
           <LoadInput
             type="file"
             id="loadFiles"
-            onChange={LoadHandleChange}
+            onChange={handleLoadChange}
             ref={(node) => _addDirectory(node)}
           ></LoadInput>
         </LoadFilesWrapper>
@@ -153,7 +152,7 @@ function App() {
                   <FileListItem
                     key={index}
                     data-key={index}
-                    onClick={FileHandleClick}
+                    onClick={handleFileClick}
                   >
                     {file.name}
                   </FileListItem>
@@ -163,8 +162,8 @@ function App() {
           </FileListWrapper>
 
           <ListBtn>
-            <PrevBtn onClick={PrevHandleClick}>이전파일</PrevBtn>
-            <NextBtn onClick={NextHandleClick}>다음파일</NextBtn>
+            <PrevBtn onClick={handlePrevClick}>이전파일</PrevBtn>
+            <NextBtn onClick={handleNextClick}>다음파일</NextBtn>
           </ListBtn>
         </FileWrapper>
 
@@ -192,7 +191,7 @@ const Head = styled.div`
 `;
 
 const LoadFilesWrapper = styled.div`
-  width: calc(25% - 33px);
+  width: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -219,7 +218,9 @@ const LoadLabel = styled.label`
 
 const FileName = styled.div`
   font-size: 25px;
-  width: calc(65% + 33px);
+  width: 70%;
+  margin: 0px 10px;
+  padding: 10px;
   text-align: center;
 `;
 const Contents = styled.div`
@@ -227,7 +228,7 @@ const Contents = styled.div`
   margin-top: 5px;
 `;
 const FileWrapper = styled.div`
-  width: 23%;
+  width: 20%;
   height: 920px;
   display: flex;
   flex-direction: column;
@@ -261,10 +262,11 @@ const FileList = styled.ul`
 `;
 
 const FileListItem = styled.li`
-  width: 100%;
+  width: 135%;
   cursor: pointer;
   font-size: 20px;
-  padding: 10px;
+  padding: 10px 5px;
+  text-align: center;
 `;
 
 const ListBtn = styled.div`
