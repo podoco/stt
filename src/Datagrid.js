@@ -53,17 +53,16 @@ export default function Datagrid({data,setData,lengd,dash}) {
   
 
   const handleEditCellChange = (params) => {
-    console.log(params);
     const { id, field, value } = params;
-    console.log('y',id,field,value);
-
+    // console.log('params',params);
     setData((prevData) => {
-      const newData = { ...prevData };
-      const [number, i] = field.split('_');
-      
-      newData.transcription.segments[number].dialect = value;
-      return newData;
+      const script = { ...prevData };
+      const data = [...script.transcription.segments]
+      data[field][id] = value;
+      script.transcription = {...script.transcription, [segments]:data};
+      return {...prevData,script};
     });
+
   }
 
   const handleAddColumn = (index) => {
@@ -81,6 +80,8 @@ export default function Datagrid({data,setData,lengd,dash}) {
   
     setColumns(newColumns);
     setRows(newRows);
+
+
   };
 
   // getCell 메소드를 사용하여 선택한 셀의 위치를 확인합니다.
@@ -95,18 +96,8 @@ export default function Datagrid({data,setData,lengd,dash}) {
     console.log('그 전 셀에 있는 것','field:',params.field, 'id:',params.id,'value:',params.value);
     const { id, field, value } = params;
 
-    // setData((prevData) => {
-    //   const newData = { ...prevData };
-    //   const [number, i] = field.split('_');
-      
-    //   newData.transcription.segments[number].dialect = value;
-    //   return newData;
-    // });
   };
 
-  const Save = () => {
-
-  };
 
     return (
       <Wrapper>
@@ -116,11 +107,11 @@ export default function Datagrid({data,setData,lengd,dash}) {
             columns={columns} 
             onCellClick={handleCellClick}
             cellMode // 셀 선택 모드 활성화
-            onEditCellChange={handleEditCellChange} 
+            editable = {true}
+            onCellEditCommit={handleEditCellChange} 
             onCellBlur={handleCellBlur}
           />
           <button onClick={() => handleAddColumn((selectionState.selectedCellIndex))}>Add</button>
-          <button onClick={Save}>save</button>
       </Wrapper>
     );
 }

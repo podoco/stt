@@ -107,10 +107,6 @@ const Span = styled.span`
     flex-direction: row;
     align-items: center;
 `
-const Time = styled.div`
-    font-size:20px;
-    margin-top:10px;
-`
 const Select = styled.select`
 width: 180px;
   height: 30px;
