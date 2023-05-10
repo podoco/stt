@@ -1,18 +1,7 @@
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { dataState } from "../store";
-
-const subjects = [
-  { title: "농경", id: 1 },
-  { title: "가족", id: 2 },
-  { title: "의", id: 3 },
-  { title: "식", id: 4 },
-  { title: "주", id: 5 },
-  { title: "자연", id: 6 },
-  { title: "건강", id: 7 },
-  { title: "풍속", id: 8 },
-  { title: "응급상황", id: 9 },
-];
+import { subjects } from "../constants";
 
 function Subject() {
   const [data, setData] = useRecoilState(dataState);

@@ -4,18 +4,8 @@ import Datagrid from "./Datagrid";
 import AudioPlayer from "./AudioPlayer";
 import { useRecoilState } from "recoil";
 import { dataState } from "../store";
+import { intent, emotion } from "../constants";
 
-const intent = [
-  { title: "DES", id: 1 },
-  { title: "EXP", id: 2 },
-  { title: "REP", id: 3 },
-];
-
-const emotion = [
-  { title: "irrelevant", id: 1 },
-  { title: "negative", id: 2 },
-  { title: "positive", id: 3 },
-];
 const calculateTime = (time) => {
   const seconds = Number(time.split(":")[2]); // 초 추출
   const minutes = Number(time.split(":")[1]); // 분 추출
