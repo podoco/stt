@@ -157,7 +157,7 @@ const FileListName = styled.div`
   padding-top: 5px;
   height: 35px;
   margin: 0 auto;
-  background-color: #0174df;
+  background-color: #333;
   color: white;
 `;
 
@@ -193,9 +193,9 @@ const PrevBtn = styled.button`
   height: 76px;
   cursor: pointer;
   font-size: 28px;
-  background-color: #0174df;
+  background-color: #333;
   color: white;
-  border-radius: 15px;
+  border-radius: 10px;
 `;
 
 const NextBtn = styled.button`
@@ -203,7 +203,7 @@ const NextBtn = styled.button`
   height: 76px;
   font-size: 28px;
   cursor: pointer;
-  background-color: #0174df;
+  background-color: #333;
   color: white;
-  border-radius: 15px;
+  border-radius: 10px;
 `;

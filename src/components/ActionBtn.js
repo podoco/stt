@@ -9,7 +9,6 @@ export default function ActionBtn() {
   // const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
-    console.log(data)
     if (dirHandle === null) {
       alert("저장 폴더를 먼저 선택해주세요!");
       return;
@@ -40,12 +39,8 @@ export default function ActionBtn() {
     defineDirHandle();
   };
 
-  const handleMergeClick = () => {};
-
   return (
     <Wrapper>
-      <MergeBtn onClick={handleMergeClick}>병합하기</MergeBtn>
-      <AddBtn>오른쪽에 추가</AddBtn>
       <SaveDirectionBtn onClick={handleSaveDirectionClick}>
         저장 폴더 선택
       </SaveDirectionBtn>
@@ -60,35 +55,6 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
 `;
-const MergeBtn = styled.button`
-  width: 150px;
-  height: 60px;
-  cursor: pointer;
-  margin-top: 15px;
-  font-size: 20px;
-  font-weight: bold;
-  background-color: #0174df;
-  border-radius: 15px;
-  color: white;
-
-  &:hover {
-    background-color: #0174dfcc;
-  }
-`;
-const AddBtn = styled.button`
-  width: 150px;
-  height: 60px;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: bold;
-  background-color: #0174df;
-  border-radius: 15px;
-  color: white;
-
-  &:hover {
-    background-color: #0174dfcc;
-  }
-`;
 
 const SaveDirectionBtn = styled.button`
   width: 150px;
@@ -96,13 +62,10 @@ const SaveDirectionBtn = styled.button`
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;
-  background-color: #0174df;
-  border-radius: 15px;
+  background-color: #333;
+  border-radius: 10px;
+  margin-left: 10px;
   color: white;
-
-  &:hover {
-    background-color: #0174dfcc;
-  }
 `;
 
 const SaveBtn = styled.button`
@@ -111,11 +74,8 @@ const SaveBtn = styled.button`
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;
-  background-color: #0174df;
-  border-radius: 15px;
+  background-color: #333;
+  border-radius: 10px;
+  margin-left: 10px;
   color: white;
-
-  &:hover {
-    background-color: #0174dfcc;
-  }
 `;

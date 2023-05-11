@@ -81,12 +81,12 @@ export default function Datagrid({ number }) {
   }, [data]);
 
   const handleEditCellChange = (params) => {
-    let { id, field, value} = params;
+    let { id, field, value } = params;
     const dash = dashs[number];
     const lengd = lengds[number];
     //dialect 1 value
-    let previousValue = data.transcription.segments[field][id]; 
-   alert(previousValue);
+    let previousValue = data.transcription.segments[field][id];
+    alert(previousValue);
 
     setData((prevData) => {
       const script = { ...prevData };
@@ -98,7 +98,7 @@ export default function Datagrid({ number }) {
       }
 
       script.transcription = { ...script.transcription, segments: data };
-      return script ;
+      return script;
     });
 
     // transcription.sentence
@@ -106,8 +106,7 @@ export default function Datagrid({ number }) {
       const sentences = [...prevData.transcription.sentences];
       const target = sentences[number];
       const modifiedTarget = { ...target, [id]: [...target[id]] };
-      
-    
+
       let currentWord = "";
       const words = modifiedTarget[id].reduce((result, char, index) => {
         if (char === " ") {
@@ -116,33 +115,33 @@ export default function Datagrid({ number }) {
         } else {
           currentWord += char;
         }
-    
+
         // 마지막 문자일 때 단어로 추가
         if (index === modifiedTarget[id].length - 1 && currentWord !== "") {
           result.push(currentWord);
         }
-    
+
         return result;
       }, []);
-    
+
       if (previousValue == null) {
         previousValue = prevData.transcription.segments[field].dialect;
       }
-    
-      console.log('갑시',words);
-     
+
+      console.log("갑시", words);
+
       field = parseInt(field); //5
 
-      for (let i = field-dash; i < lengd; i++) {
+      for (let i = field - dash; i < lengd; i++) {
         if (words[i] === previousValue) {
           words[i] = value;
           break;
         }
       }
- 
+
       const updatedSentences = [...sentences];
       updatedSentences[number] = { ...modifiedTarget, [id]: words.join(" ") };
-    
+
       return {
         ...prevData,
         transcription: {
@@ -151,24 +150,23 @@ export default function Datagrid({ number }) {
         },
       };
     });
-    
 
     //transcription -dialect,pronunciation,standard
     setData((prevData) => {
       const sentences = { ...prevData };
       let target = sentences.transcription[id];
 
-    // target이 undefined인 경우를 처리하기 위해 기본값으로 빈 문자열 할당
-    if (target === undefined) {
-      target = '';
-    }
+      // target이 undefined인 경우를 처리하기 위해 기본값으로 빈 문자열 할당
+      if (target === undefined) {
+        target = "";
+      }
 
       const words = target.split(" ");
-      if(previousValue == null){
-        previousValue = data.transcription.segments[field].dialect
+      if (previousValue == null) {
+        previousValue = data.transcription.segments[field].dialect;
       }
       field = parseInt(field);
-      for (let i = field; i < field+lengd; i++) {
+      for (let i = field; i < field + lengd; i++) {
         console.log(i);
         if (words[i] === previousValue) {
           words[i] = value;
@@ -180,7 +178,6 @@ export default function Datagrid({ number }) {
       return sentences;
     });
   };
-
 
   const handleAddColumn = (index) => {
     if (index === null) return;
@@ -350,8 +347,12 @@ export default function Datagrid({ number }) {
         onCellEditCommit={handleEditCellChange}
         onCellBlur={handleCellBlur}
       />
-      <button onClick={() => handleAddColumn(selectionIndex)}>Add</button>
-      <button onClick={() => handleMergeColumn()}>Merge</button>
+      <BtnWrapper>
+        <AddBtn onClick={() => handleAddColumn(selectionIndex)}>
+          오른쪽에 추가
+        </AddBtn>
+        <MergeBtn onClick={() => handleMergeColumn()}>병합하기</MergeBtn>
+      </BtnWrapper>
     </Wrapper>
   );
 }
@@ -360,4 +361,36 @@ const Wrapper = styled.div`
   width: 100%;
   height: 80%;
   background: white;
+`;
+
+const BtnWrapper = styled.div`
+  display: flex;
+  margin-top: 15px;
+`;
+
+const AddBtn = styled.div`
+  width: 100px;
+  background-color: rgb(239, 239, 239);
+  text-align: center;
+  padding: 5px;
+  margin-right: 10px;
+  border-radius: 2px;
+  border: 1px solid gray;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(230, 230, 230);
+  }
+`;
+
+const MergeBtn = styled.div`
+  width: 100px;
+  background-color: rgb(239, 239, 239);
+  text-align: center;
+  padding: 5px;
+  border-radius: 2px;
+  border: 1px solid gray;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(230, 230, 230);
+  }
 `;
