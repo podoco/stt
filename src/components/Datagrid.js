@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { dataState, selectedColsState } from "../store";
+import { dataState, selectedColsState, selectionIndexState } from "../store";
 
 export default function Datagrid({ lengd, dash }) {
   const [data, setData] = useRecoilState(dataState);
@@ -11,7 +11,8 @@ export default function Datagrid({ lengd, dash }) {
   const segmentsLength = lengd;
 
   const gridRef = useRef(null);
-  const [selectionIndex, setSelectionIndex] = useState();
+  const [selectionIndex, setSelectionIndex] =
+    useRecoilState(selectionIndexState);
 
   const [rows, setRows] = useState([
     { id: "standard" },
@@ -76,7 +77,6 @@ export default function Datagrid({ lengd, dash }) {
   const handleAddColumn = (index) => {
     if (index === null) return;
     const newField = index + 1;
-
     setData((prevData) => {
       const script = { ...prevData };
       const data = [...script.transcription.segments];
@@ -96,7 +96,6 @@ export default function Datagrid({ lengd, dash }) {
 
   const handleMergeColumn = () => {
     if (selectedCols.length === 0) return;
-
     const _selectedCols = [...selectedCols];
     // selectedCols check
     _selectedCols.sort();
@@ -111,41 +110,61 @@ export default function Datagrid({ lengd, dash }) {
     }
 
     const newField = _selectedCols[0];
-    const newData = {
-      standard: null,
-      dialect: null,
-      pronunciation: null,
-      startTime: null,
-      endTime: null,
-    };
-    rows.forEach((row) => {
-      const _rowDatas = [];
-      _selectedCols.forEach((index) => {
-        if (row[String(index)]) {
-          _rowDatas.push(row[String(index)]);
-        }
-        delete row[String(index)];
-      });
-      if (row.id === "startTime") {
-        newData[row.id] = _rowDatas[0];
-      } else if (row.id === "endTime") {
-        newData[row.id] = _rowDatas[_rowDatas.length - 1];
-      } else {
-        newData[row.id] = _rowDatas ? _rowDatas.join(" ") : null;
-      }
-      row[newField] = newData[row.id];
-      return row;
-    });
 
     setData((prevData) => {
       const script = { ...prevData };
       const data = [...script.transcription.segments];
+      const newData = {
+        startTime: null,
+        endTime: null,
+        dialect: null,
+        pronunciation: null,
+        standard: null,
+      };
+      Object.keys(newData).forEach((key) => {
+        const _rowDatas = [];
+        _selectedCols.forEach((index) => {
+          if (data[index][key]) {
+            _rowDatas.push(data[index][key]);
+          }
+        });
+        if (key === "startTime") {
+          newData[key] = _rowDatas[0];
+        } else if (key === "endTime") {
+          newData[key] = _rowDatas[_rowDatas.length - 1];
+        } else {
+          newData[key] = _rowDatas ? _rowDatas.join(" ") : null;
+        }
+      });
+
       data.splice(newField, _selectedCols.length, {
         orderInFile: newField + 1,
+        startTime: newData["startTime"],
+        endTime: newData["endTime"],
+        dialect: newData["dialect"] ? newData["dialect"] : null,
+        pronunciation: newData["pronunciation"]
+          ? newData["pronunciation"]
+          : null,
+        standard: newData["standard"] ? newData["standard"] : null,
         voiceType: "voice_speech",
-        ...newData,
       });
-      script.transcription = { ...script.transcription, segments: data };
+
+      const result = data.map((_data, i) => {
+        if (i <= newField) return _data;
+        else {
+          return {
+            orderInFile: i + 1,
+            startTime: _data.startTime,
+            endTime: _data.endTime,
+            dialect: _data.dialect,
+            pronunciation: _data.pronunciation,
+            standard: _data.standard,
+            voiceType: _data.voiceType,
+          };
+        }
+      });
+
+      script.transcription = { ...script.transcription, segments: result };
       return script;
     });
     setSelectedCols([]);
@@ -171,7 +190,6 @@ export default function Datagrid({ lengd, dash }) {
       setSelectedCols([...selectedCols, parseInt(colDef.field)]);
     }
   };
-
   // 셀에서 떠날때 디버깅
   const handleCellBlur = (params) => {
     // console.log(

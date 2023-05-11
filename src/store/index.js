@@ -25,9 +25,9 @@ export const rowsState = atom({
   default: [],
 });
 
-export const selectionState = atom({
-  key: "selection",
-  default: {},
+export const selectionIndexState = atom({
+  key: "selectionIndex",
+  default: 0,
 });
 
 export const dirHandleState = atom({
