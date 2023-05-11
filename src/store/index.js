@@ -29,3 +29,8 @@ export const selectionState = atom({
   key: "selection",
   default: {},
 });
+
+export const dirHandleState = atom({
+  key: "dirHandle",
+  default: null,
+});
