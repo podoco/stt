@@ -10,7 +10,7 @@ const calculateTime = (time) => {
   const seconds = Number(time.split(":")[2]); // 초 추출
   const minutes = Number(time.split(":")[1]); // 분 추출
   const hours = Number(time.split(":")[0]); // 시간 추출
-  return (hours * 3600 + minutes * 60 + seconds).toFixed(2);
+  return (hours * 3600 + minutes * 60 + seconds).toFixed(3);
 };
 
 export default function Sentence({ number, dash, lengd }) {

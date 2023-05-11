@@ -50,7 +50,7 @@ class AudioPlayer extends React.Component {
         </audio>
         <StyledFontAwesomeIcon icon={faPlay} onClick={this.playAudio}/>
         <StyledFontAwesomeIcon icon={faPause}  onClick={this.pauseAudio} />
-         <Time>{currentTime.toFixed(2)}</Time>
+         <Time>{currentTime.toFixed(3)}</Time>
       </AudioWrapper>
     );
   }
@@ -70,7 +70,7 @@ const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   font-size: 20px;
 `;
 const Time = styled.span`
-  width: 64px;
+  width: 80px;
   height: 34px;
   background-color:white;
   font-size:26px;
