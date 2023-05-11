@@ -20,6 +20,7 @@ export default function ActionBtn() {
     });
     await writableStream.write(strData);
     await writableStream.close();
+    alert("파일이 저장되었습니다.");
   }
 
   const handleSaveClick = () => {
@@ -36,21 +37,6 @@ export default function ActionBtn() {
   const handleSaveDirectionClick = () => {
     defineDirHandle();
   };
-
-  const preventClose = (e) => {
-    e.preventDefault();
-    e.returnValue = ""; //Chrome에서 동작하도록 함. deprecated될 예정이라고 함
-  };
-
-  useEffect(() => {
-    (() => {
-      window.addEventListener("beforeunload", preventClose);
-    })();
-
-    return () => {
-      window.removeEventListener("beforeunload", preventClose);
-    };
-  }, []);
 
   return (
     <Wrapper>
