@@ -2,13 +2,19 @@ import React, { useState, useRef, useEffect } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { dataState, selectedColsState, selectionIndexState } from "../store";
+import {
+  dataState,
+  selectedColsState,
+  selectionIndexState,
+  dashsState,
+  lengdsState,
+} from "../store";
 
-export default function Datagrid({ lengd, dash }) {
+export default function Datagrid({ number }) {
   const [data, setData] = useRecoilState(dataState);
   const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
-  const segments = data.transcription.segments;
-  const segmentsLength = lengd;
+  const [dashs, setDashs] = useRecoilState(dashsState);
+  const [lengds, setLengds] = useRecoilState(lengdsState);
 
   const gridRef = useRef(null);
   const [selectionIndex, setSelectionIndex] =
@@ -25,7 +31,10 @@ export default function Datagrid({ lengd, dash }) {
     { field: "id", headerName: "/", width: 130 },
   ]);
 
-  useEffect(() => {
+  const changeDataForColsRows = () => {
+    const segments = data.transcription.segments;
+    const dash = dashs[number];
+    const lengd = lengds[number];
     const newRows = [
       { id: "standard" },
       { id: "dialect" },
@@ -37,15 +46,13 @@ export default function Datagrid({ lengd, dash }) {
       { field: "id", headerName: "/", width: 130, sortable: false },
     ];
 
-    for (let i = dash; i < dash + segmentsLength; i++) {
+    for (let i = dash; i < dash + lengd; i++) {
       newRows[0][i] = segments[i].standard; // standard
       newRows[1][i] = segments[i].dialect; // dialect
       newRows[2][i] = segments[i].pronunciation; // pronunciation
       newRows[3][i] = segments[i].startTime; // startTime
       newRows[4][i] = segments[i].endTime; // endTime
-    }
 
-    for (let i = dash; i < dash + segmentsLength; i++) {
       newColumns.push({
         field: `${i}`,
         width: 150,
@@ -56,6 +63,10 @@ export default function Datagrid({ lengd, dash }) {
 
     setRows(newRows);
     setColumns(newColumns);
+  };
+
+  useEffect(() => {
+    changeDataForColsRows();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -77,27 +88,57 @@ export default function Datagrid({ lengd, dash }) {
   const handleAddColumn = (index) => {
     if (index === null) return;
     const newField = index + 1;
+    const _dashs = [...dashs];
+    const _lengds = [...lengds];
+    _lengds[number] += 1;
+
+    for (let i = number + 1; i < _dashs.length; i++) {
+      _dashs[i] += 1;
+    }
+    setDashs(_dashs);
+    setLengds(_lengds);
+
     setData((prevData) => {
       const script = { ...prevData };
       const data = [...script.transcription.segments];
       data.splice(newField, 0, {
         orderInFile: newField + 1,
-        voiceType: "voice_speech",
         startTime: null,
         endTime: null,
+        dialect: null,
         pronunciation: null,
         standard: null,
-        dialect: null,
+        voiceType: "voice_speech",
       });
-      script.transcription = { ...script.transcription, segments: data };
+      const result = data.map((_data, i) => {
+        return {
+          orderInFile: i + 1,
+          startTime: _data.startTime,
+          endTime: _data.endTime,
+          dialect: _data.dialect,
+          pronunciation: _data.pronunciation,
+          standard: _data.standard,
+          voiceType: _data.voiceType,
+        };
+      });
+      script.transcription = { ...script.transcription, segments: result };
       return script;
     });
   };
 
   const handleMergeColumn = () => {
     if (selectedCols.length === 0) return;
+    const _dashs = [...dashs];
+    const _lengds = [...lengds];
+
+    _lengds[number] -= selectedCols.length - 1;
+    for (let i = number + 1; i < _dashs.length; i++) {
+      _dashs[i] -= selectedCols.length - 1;
+    }
+    setDashs(_dashs);
+    setLengds(_lengds);
+
     const _selectedCols = [...selectedCols];
-    // selectedCols check
     _selectedCols.sort();
     const finalSequence = _selectedCols.reduce((prev, current, i, arr) => {
       let _prev = prev + 1;
@@ -150,18 +191,15 @@ export default function Datagrid({ lengd, dash }) {
       });
 
       const result = data.map((_data, i) => {
-        if (i <= newField) return _data;
-        else {
-          return {
-            orderInFile: i + 1,
-            startTime: _data.startTime,
-            endTime: _data.endTime,
-            dialect: _data.dialect,
-            pronunciation: _data.pronunciation,
-            standard: _data.standard,
-            voiceType: _data.voiceType,
-          };
-        }
+        return {
+          orderInFile: i + 1,
+          startTime: _data.startTime,
+          endTime: _data.endTime,
+          dialect: _data.dialect,
+          pronunciation: _data.pronunciation,
+          standard: _data.standard,
+          voiceType: _data.voiceType,
+        };
       });
 
       script.transcription = { ...script.transcription, segments: result };

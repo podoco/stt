@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { dataState, filesState } from "../store";
+import {
+  dataState,
+  filesState,
+  selectedFileIndexState,
+  dashsState,
+  lengdsState,
+} from "../store";
 
 export default function File() {
   const setData = useSetRecoilState(dataState);
+  const setSelectedFileIndex = useSetRecoilState(selectedFileIndexState);
+  const setDashs = useSetRecoilState(dashsState);
+  const setLengds = useSetRecoilState(lengdsState);
   const files = useRecoilValue(filesState);
   const [prevIndex, setPrevIndex] = useState();
   const fileReader = new FileReader();
@@ -28,7 +37,7 @@ export default function File() {
 
       const currentIndex = prevIndex - 1;
       changeSelectedItemStyle(prevIndex, currentIndex);
-
+      setSelectedFileIndex(currentIndex);
       setPrevIndex(currentIndex);
       fileReaderLoad(currentIndex);
     }
@@ -40,7 +49,7 @@ export default function File() {
 
       const currentIndex = prevIndex + 1;
       changeSelectedItemStyle(prevIndex, currentIndex);
-
+      setSelectedFileIndex(currentIndex);
       setPrevIndex(currentIndex);
       fileReaderLoad(currentIndex);
     }
@@ -51,6 +60,7 @@ export default function File() {
       "rgb(239, 239, 239)";
     event.target.style.backgroundColor = "rgb(220, 220, 220)";
     let selectedIndex = parseInt(event.target.getAttribute("data-key"));
+    setSelectedFileIndex(selectedIndex);
     setPrevIndex(selectedIndex);
     fileReaderLoad(selectedIndex);
   };
@@ -58,13 +68,40 @@ export default function File() {
   const fileReaderLoad = (index) => {
     fileReader.addEventListener("load", (e) => {
       let loadData = JSON.parse(fileReader.result);
+      initDashPoint(loadData);
       setData(loadData);
     });
     fileReader.readAsText(files[index]["json"]);
   };
 
+  const initDashPoint = (data) => {
+    const leng = data?.transcription?.sentences?.length || 0;
+    const _dashs = [0];
+    const _lengds = [];
+    let accumulatedSegments = 0;
+    for (let i = 0; i < leng; i++) {
+      const orgStartTime = data.transcription.sentences[i].startTime;
+      const orgEndTime = data.transcription.sentences[i].endTime;
+
+      const segments = data.transcription.segments.filter((segment, index) => {
+        const segmentStartTime = segment.startTime;
+        const segmentEndTime = segment.endTime;
+        const isInTimeRange =
+          segmentStartTime >= orgStartTime && segmentEndTime <= orgEndTime;
+        return isInTimeRange;
+      });
+      _lengds.push(segments.length);
+      accumulatedSegments += segments.length;
+      _dashs.push(accumulatedSegments);
+    }
+
+    setDashs(_dashs);
+    setLengds(_lengds);
+  };
+
   useEffect(() => {
     if (files.length !== 0) {
+      setSelectedFileIndex(0);
       setPrevIndex(0);
       fileReaderLoad(0);
       let prev = prevIndex ? prevIndex : 0;

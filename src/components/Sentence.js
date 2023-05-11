@@ -13,7 +13,7 @@ const calculateTime = (time) => {
   return (hours * 3600 + minutes * 60 + seconds).toFixed(3);
 };
 
-export default function Sentence({ number, dash, lengd }) {
+export default function Sentence({ number }) {
   const [data, setData] = useRecoilState(dataState);
   const intentTitle = data.annotation;
   const startTime = calculateTime(
@@ -66,12 +66,7 @@ export default function Sentence({ number, dash, lengd }) {
           </Select>
         </Span>
       </Head>
-      <Datagrid
-        data={data}
-        setData={setData}
-        lengd={lengd[number]}
-        dash={dash[number]}
-      />
+      <Datagrid number={number} />
     </List>
   );
 }

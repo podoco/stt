@@ -30,7 +30,22 @@ export const selectionIndexState = atom({
   default: 0,
 });
 
+export const selectedFileIndexState = atom({
+  key: "selectedFileIndex",
+  default: 0,
+});
+
 export const dirHandleState = atom({
   key: "dirHandle",
   default: null,
+});
+
+export const dashsState = atom({
+  key: "dashs",
+  default: [0],
+});
+
+export const lengdsState = atom({
+  key: "lengds",
+  default: [],
 });
