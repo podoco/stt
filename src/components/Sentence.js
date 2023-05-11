@@ -68,6 +68,7 @@ export default function Sentence({ number, dash, lengd }) {
       </Head>
       <Datagrid
         data={data}
+        number={number}
         setData={setData}
         lengd={lengd[number]}
         dash={dash[number]}
