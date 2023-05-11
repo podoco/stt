@@ -64,12 +64,15 @@ export default function Datagrid({ lengd, dash }) {
 
   const handleEditCellChange = (params) => {
     const { id, field, value } = params;
+    //dialect 1 value
+  
     setData((prevData) => {
       const script = { ...prevData };
       const data = [...script.transcription.segments];
-      data[field][id] = value;
-      script.transcription = { ...script.transcription, [segments]: data };
-      return { ...prevData, script };
+      const updatedSegment = { ...data[field], [id]: value };
+      data[field] = updatedSegment;
+      script.transcription = { ...script.transcription, segments: data };
+      return script ;
     });
   };
 
