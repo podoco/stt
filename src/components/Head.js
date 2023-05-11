@@ -89,7 +89,7 @@ const LoadLabel = styled.label`
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #333;
+  background-color: #444;
   border-radius: 10px;
   border: 1px black solid;
   color: white;

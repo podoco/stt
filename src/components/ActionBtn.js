@@ -62,7 +62,7 @@ const SaveDirectionBtn = styled.button`
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;
-  background-color: #333;
+  background-color: #444;
   border-radius: 10px;
   margin-left: 10px;
   color: white;
@@ -74,7 +74,7 @@ const SaveBtn = styled.button`
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;
-  background-color: #333;
+  background-color: #444;
   border-radius: 10px;
   margin-left: 10px;
   color: white;
