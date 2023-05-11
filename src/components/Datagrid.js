@@ -47,11 +47,21 @@ export default function Datagrid({ number }) {
     ];
 
     for (let i = dash; i < dash + lengd; i++) {
-      newRows[0][i] = segments[i].standard; // standard
-      newRows[1][i] = segments[i].dialect; // dialect
-      newRows[2][i] = segments[i].pronunciation; // pronunciation
-      newRows[3][i] = segments[i].startTime; // startTime
-      newRows[4][i] = segments[i].endTime; // endTime
+      if (segments[i] && segments[i].standard) {
+        newRows[0][i] = segments[i].standard; // standard
+      }
+      if (segments[i] && segments[i].dialect) {
+        newRows[1][i] = segments[i].dialect; // dialect
+      }
+      if (segments[i] && segments[i].pronunciation) {
+        newRows[2][i] = segments[i].pronunciation; // pronunciation
+      }
+      if (segments[i] && segments[i].startTime) {
+        newRows[3][i] = segments[i].startTime; // startTime
+      }
+      if (segments[i] && segments[i].endTime) {
+        newRows[4][i] = segments[i].endTime; // endTime
+      }
 
       newColumns.push({
         field: `${i}`,
@@ -71,19 +81,106 @@ export default function Datagrid({ number }) {
   }, [data]);
 
   const handleEditCellChange = (params) => {
-    // console.log(params);
-    const { id, field, value } = params;
+    let { id, field, value} = params;
+    const dash = dashs[number];
+    const lengd = lengds[number];
     //dialect 1 value
+    let previousValue = data.transcription.segments[field][id]; 
+   alert(previousValue);
 
     setData((prevData) => {
       const script = { ...prevData };
       const data = [...script.transcription.segments];
-      const updatedSegment = { ...data[field], [id]: value };
-      data[field] = updatedSegment;
+
+      if (data[field]) {
+        const updatedSegment = { ...data[field], [id]: value };
+        data[field] = updatedSegment;
+      }
+
       script.transcription = { ...script.transcription, segments: data };
-      return script;
+      return script ;
+    });
+
+    // transcription.sentence
+    setData((prevData) => {
+      const sentences = [...prevData.transcription.sentences];
+      const target = sentences[number];
+      const modifiedTarget = { ...target, [id]: [...target[id]] };
+      
+    
+      let currentWord = "";
+      const words = modifiedTarget[id].reduce((result, char, index) => {
+        if (char === " ") {
+          result.push(currentWord);
+          currentWord = "";
+        } else {
+          currentWord += char;
+        }
+    
+        // 마지막 문자일 때 단어로 추가
+        if (index === modifiedTarget[id].length - 1 && currentWord !== "") {
+          result.push(currentWord);
+        }
+    
+        return result;
+      }, []);
+    
+      if (previousValue == null) {
+        previousValue = prevData.transcription.segments[field].dialect;
+      }
+    
+      console.log('갑시',words);
+     
+      field = parseInt(field); //5
+
+      for (let i = field-dash; i < lengd; i++) {
+        if (words[i] === previousValue) {
+          words[i] = value;
+          break;
+        }
+      }
+ 
+      const updatedSentences = [...sentences];
+      updatedSentences[number] = { ...modifiedTarget, [id]: words.join(" ") };
+    
+      return {
+        ...prevData,
+        transcription: {
+          ...prevData.transcription,
+          sentences: updatedSentences,
+        },
+      };
+    });
+    
+
+    //transcription -dialect,pronunciation,standard
+    setData((prevData) => {
+      const sentences = { ...prevData };
+      let target = sentences.transcription[id];
+
+    // target이 undefined인 경우를 처리하기 위해 기본값으로 빈 문자열 할당
+    if (target === undefined) {
+      target = '';
+    }
+
+      const words = target.split(" ");
+      if(previousValue == null){
+        previousValue = data.transcription.segments[field].dialect
+      }
+      field = parseInt(field);
+      for (let i = field; i < field+lengd; i++) {
+        console.log(i);
+        if (words[i] === previousValue) {
+          words[i] = value;
+          break;
+        }
+      }
+      target = words.join(" ");
+      sentences.transcription = { ...sentences.transcription, [id]: target };
+      return sentences;
     });
   };
+
 
   const handleAddColumn = (index) => {
     if (index === null) return;

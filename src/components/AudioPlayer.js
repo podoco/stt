@@ -33,14 +33,31 @@ class AudioPlayer extends React.Component {
         });
       });
     }
+    this.animationFrame = requestAnimationFrame(this.updateTime);
   }
+  updateTime = () => {
+    const { startTime, endTime } = this.props;
+
+    if (this.audioRef.current.currentTime >= endTime) {
+      this.audioRef.current.pause();
+      this.audioRef.current.currentTime = startTime;
+    }
+
+    this.setState({
+      currentTime: this.audioRef.current.currentTime,
+    });
+
+    this.animationFrame = requestAnimationFrame(this.updateTime);
+  };
 
   pauseAudio() {
     this.setState({
       pausedTime: this.audioRef.current.currentTime,
     });
     this.audioRef.current.pause();
+    cancelAnimationFrame(this.animationFrame);
   }
+
   render() {
     const { currentTime } = this.state;
     return (
@@ -79,3 +96,4 @@ const Time = styled.span`
   border-radius:10px;
 `
 export default AudioPlayer;
+

@@ -1,14 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { dataState, dirHandleState, selectedColsState } from "../store";
+import { dataState, dirHandleState } from "../store";
 
 export default function ActionBtn() {
   const data = useRecoilValue(dataState);
   const [dirHandle, setDirHandle] = useRecoilState(dirHandleState);
-  const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
+  // const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
+    console.log(data)
     if (dirHandle === null) {
       alert("저장 폴더를 먼저 선택해주세요!");
       return;
