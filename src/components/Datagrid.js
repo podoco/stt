@@ -11,11 +11,7 @@ export default function Datagrid({ lengd, dash }) {
   const segmentsLength = lengd;
 
   const gridRef = useRef(null);
-  const [selectionState, setSelectionState] = useState({
-    selectedRowIndex: null,
-    selectedCellIndex: null,
-    value: null,
-  });
+  const [selectionIndex, setSelectionIndex] = useState();
 
   const [rows, setRows] = useState([
     { id: "standard" },
@@ -79,27 +75,23 @@ export default function Datagrid({ lengd, dash }) {
 
   const handleAddColumn = (index) => {
     if (index === null) return;
-    const newColumns = [...columns];
-    const newRows = [...rows];
+    const newField = index + 1;
 
-    const [number, i] = index.split("_");
-    const newField =
-      i !== undefined ? `${number}_${parseInt(i, 10) + 1}` : `${number}_1`;
-
-    // console.log(newField);
-    // 새로운 열 추가
-    const insertIndex =
-      newColumns.findIndex((column) => column.field === index) + 1;
-    // console.log("인덱스", insertIndex);
-    newColumns.splice(insertIndex, 0, {
-      field: newField,
-      width: 150,
-      editable: true,
-      sortable: false,
+    setData((prevData) => {
+      const script = { ...prevData };
+      const data = [...script.transcription.segments];
+      data.splice(newField, 0, {
+        orderInFile: newField + 1,
+        voiceType: "voice_speech",
+        startTime: null,
+        endTime: null,
+        pronunciation: null,
+        standard: null,
+        dialect: null,
+      });
+      script.transcription = { ...script.transcription, segments: data };
+      return script;
     });
-
-    setColumns(newColumns);
-    setRows(newRows);
   };
 
   const handleMergeColumn = () => {
@@ -161,15 +153,9 @@ export default function Datagrid({ lengd, dash }) {
 
   // getCell 메소드를 사용하여 선택한 셀의 위치를 확인합니다.
   const handleCellClick = (params, event) => {
-    const { row, colDef } = params;
-    // console.log(
-    //   "클릭시",
-    //   `row: ${row.id}, column: ${colDef.field} value:${value}`
-    // );
-    setSelectionState({
-      selectedRowIndex: row.id,
-      selectedCellIndex: colDef.field,
-    });
+    const { colDef } = params;
+
+    setSelectionIndex(parseInt(colDef.field));
 
     if (params.field === "id") return;
 
@@ -211,9 +197,7 @@ export default function Datagrid({ lengd, dash }) {
         onCellEditCommit={handleEditCellChange}
         onCellBlur={handleCellBlur}
       />
-      <button onClick={() => handleAddColumn(selectionState.selectedCellIndex)}>
-        Add
-      </button>
+      <button onClick={() => handleAddColumn(selectionIndex)}>Add</button>
       <button onClick={() => handleMergeColumn()}>Merge</button>
     </Wrapper>
   );

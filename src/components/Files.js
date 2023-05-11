@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import { dataState, filesState } from "../store";
 
 export default function File() {
-  const [data, setData] = useRecoilState(dataState);
-  const [files, setFiles] = useRecoilState(filesState);
+  const setData = useSetRecoilState(dataState);
+  const files = useRecoilValue(filesState);
   const [prevIndex, setPrevIndex] = useState();
   const fileReader = new FileReader();
   const itemRef = useRef(null);

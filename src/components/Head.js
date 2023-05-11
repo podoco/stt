@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import Subject from "./Subject";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { filesState, dataState } from "../store";
 
 export default function Head() {
-  const [data, setData] = useRecoilState(dataState);
-  const [files, setFiles] = useRecoilState(filesState);
+  const data = useRecoilValue(dataState);
+  const setFiles = useSetRecoilState(filesState);
 
   const handleLoadChange = (event) => {
     let uploads = event.target.files;
