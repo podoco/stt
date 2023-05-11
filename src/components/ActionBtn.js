@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { dataState, dirHandleState } from "../store";
+import { dataState, dirHandleState, selectedColsState } from "../store";
 
 export default function ActionBtn() {
   const data = useRecoilValue(dataState);
   const [dirHandle, setDirHandle] = useRecoilState(dirHandleState);
+  const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
     if (dirHandle === null) {
@@ -38,9 +39,11 @@ export default function ActionBtn() {
     defineDirHandle();
   };
 
+  const handleMergeClick = () => {};
+
   return (
     <Wrapper>
-      <MergeBtn>병합하기</MergeBtn>
+      <MergeBtn onClick={handleMergeClick}>병합하기</MergeBtn>
       <AddBtn>오른쪽에 추가</AddBtn>
       <SaveDirectionBtn onClick={handleSaveDirectionClick}>
         저장 폴더 선택

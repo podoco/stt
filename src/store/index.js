@@ -12,7 +12,7 @@ export const filesState = atom({
 
 export const selectedColsState = atom({
   key: "selectedCols",
-  default: {},
+  default: [],
 });
 
 export const columnsState = atom({

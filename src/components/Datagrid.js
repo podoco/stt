@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { dataState } from "../store";
+import { dataState, selectedColsState } from "../store";
 
 export default function Datagrid({ lengd, dash }) {
   const [data, setData] = useRecoilState(dataState);
+  const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
   const segments = data.transcription.segments;
   const segmentsLength = lengd;
 
@@ -26,7 +27,6 @@ export default function Datagrid({ lengd, dash }) {
   const [columns, setColumns] = useState([
     { field: "id", headerName: "/", width: 130 },
   ]);
-  const [selectedCols, setSelectedCols] = useState([]);
 
   useEffect(() => {
     const newRows = [
@@ -63,16 +63,17 @@ export default function Datagrid({ lengd, dash }) {
   }, [data]);
 
   const handleEditCellChange = (params) => {
+    // console.log(params);
     const { id, field, value } = params;
     //dialect 1 value
-  
+
     setData((prevData) => {
       const script = { ...prevData };
       const data = [...script.transcription.segments];
       const updatedSegment = { ...data[field], [id]: value };
       data[field] = updatedSegment;
       script.transcription = { ...script.transcription, segments: data };
-      return script ;
+      return script;
     });
   };
 
@@ -101,6 +102,63 @@ export default function Datagrid({ lengd, dash }) {
     setRows(newRows);
   };
 
+  const handleMergeColumn = () => {
+    if (selectedCols.length === 0) return;
+
+    const _selectedCols = [...selectedCols];
+    // selectedCols check
+    _selectedCols.sort();
+    const finalSequence = _selectedCols.reduce((prev, current, i, arr) => {
+      let _prev = prev + 1;
+      if (_prev !== current) return arr.splice(1);
+      return _prev;
+    });
+    if (finalSequence !== _selectedCols[_selectedCols.length - 1]) {
+      alert("연속된 수를 입력해주세요!");
+      return;
+    }
+
+    const newField = _selectedCols[0];
+    const newData = {
+      standard: null,
+      dialect: null,
+      pronunciation: null,
+      startTime: null,
+      endTime: null,
+    };
+    rows.forEach((row) => {
+      const _rowDatas = [];
+      _selectedCols.forEach((index) => {
+        if (row[String(index)]) {
+          _rowDatas.push(row[String(index)]);
+        }
+        delete row[String(index)];
+      });
+      if (row.id === "startTime") {
+        newData[row.id] = _rowDatas[0];
+      } else if (row.id === "endTime") {
+        newData[row.id] = _rowDatas[_rowDatas.length - 1];
+      } else {
+        newData[row.id] = _rowDatas ? _rowDatas.join(" ") : null;
+      }
+      row[newField] = newData[row.id];
+      return row;
+    });
+
+    setData((prevData) => {
+      const script = { ...prevData };
+      const data = [...script.transcription.segments];
+      data.splice(newField, _selectedCols.length, {
+        orderInFile: newField + 1,
+        voiceType: "voice_speech",
+        ...newData,
+      });
+      script.transcription = { ...script.transcription, segments: data };
+      return script;
+    });
+    setSelectedCols([]);
+  };
+
   // getCell 메소드를 사용하여 선택한 셀의 위치를 확인합니다.
   const handleCellClick = (params, event) => {
     const { row, colDef } = params;
@@ -116,17 +174,15 @@ export default function Datagrid({ lengd, dash }) {
     if (params.field === "id") return;
 
     if (!event.altKey) {
-      selectedCols.forEach((col) => {
-        col.colDef.cellClassName = "";
+      selectedCols.forEach((index) => {
+        columns[index + 1].cellClassName = "";
+        setColumns([...columns]);
       });
       setSelectedCols([]);
     } else {
-      const cols = [...selectedCols];
-      cols.push(params);
-      cols.forEach((col) => {
-        col.colDef.cellClassName = "selected";
-      });
-      setSelectedCols(cols);
+      colDef.cellClassName = "selected";
+      if (selectedCols.indexOf(colDef.field) !== -1) return;
+      setSelectedCols([...selectedCols, parseInt(colDef.field)]);
     }
   };
 
@@ -158,6 +214,7 @@ export default function Datagrid({ lengd, dash }) {
       <button onClick={() => handleAddColumn(selectionState.selectedCellIndex)}>
         Add
       </button>
+      <button onClick={() => handleMergeColumn()}>Merge</button>
     </Wrapper>
   );
 }
