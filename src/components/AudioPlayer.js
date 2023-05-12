@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { faPlay,faPause } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from "react";
+import styled from "styled-components";
+import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class AudioPlayer extends React.Component {
   constructor(props) {
@@ -9,7 +9,7 @@ class AudioPlayer extends React.Component {
     this.audioRef = React.createRef();
     this.state = {
       pausedTime: null,
-      currentTime:0,
+      currentTime: 0,
     };
     this.playAudio = this.playAudio.bind(this);
     this.pauseAudio = this.pauseAudio.bind(this);
@@ -62,38 +62,37 @@ class AudioPlayer extends React.Component {
     const { currentTime } = this.state;
     return (
       <AudioWrapper>
-        <audio ref={this.audioRef} >
+        <audio ref={this.audioRef}>
           <source src="/sample.wav" type="audio/wav" />
         </audio>
-        <StyledFontAwesomeIcon icon={faPlay} onClick={this.playAudio}/>
-        <StyledFontAwesomeIcon icon={faPause}  onClick={this.pauseAudio} />
-         <Time>{currentTime.toFixed(3)}</Time>
+        <StyledFontAwesomeIcon icon={faPlay} onClick={this.playAudio} />
+        <StyledFontAwesomeIcon icon={faPause} onClick={this.pauseAudio} />
+        <Time>{currentTime.toFixed(3)}</Time>
       </AudioWrapper>
     );
   }
 }
 const AudioWrapper = styled.div`
   display: flex;
-`
+`;
 const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
   color: white;
   width: 25px;
   height: 15px;
   background: gray;
   padding: 10px;
-  border-radius:10px;
-  margin-left:15px;
-  margin-right:5px;
+  border-radius: 10px;
+  margin-left: 15px;
+  margin-right: 5px;
   font-size: 20px;
 `;
 const Time = styled.span`
   width: 80px;
   height: 34px;
-  background-color:white;
-  font-size:26px;
-  margin-left:6px;
+  background-color: white;
+  font-size: 26px;
+  margin-left: 6px;
   padding-left: 8px;
-  border-radius:10px;
-`
+  border-radius: 10px;
+`;
 export default AudioPlayer;
-

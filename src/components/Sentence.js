@@ -16,10 +16,12 @@ const calculateTime = (time) => {
 export default function Sentence({ number }) {
   const [data, setData] = useRecoilState(dataState);
   const intentTitle = data.annotation;
-  const startTime = calculateTime(
-    data.transcription.sentences[number].startTime
+  const startTime = parseFloat(
+    calculateTime(data.transcription.sentences[number].startTime)
   );
-  const endTime = calculateTime(data.transcription.sentences[number].endTime);
+  const endTime = parseFloat(
+    calculateTime(data.transcription.sentences[number].endTime)
+  );
 
   const handleTagTypeChange = (target, prop) => {
     const index = target.options.selectedIndex;
