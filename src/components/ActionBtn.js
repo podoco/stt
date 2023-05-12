@@ -11,7 +11,7 @@ export default function ActionBtn() {
   // const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
-    console.log('sdas',data);
+
     if (dirHandle === null) {
       alert("저장 폴더를 먼저 선택해주세요!");
       return;
@@ -19,9 +19,7 @@ export default function ActionBtn() {
     const fileHandle = await dirHandle.getFileHandle(`${data.fileName}.json`, {
       create: true,
     });
-    const writableStream = await fileHandle.createWritable({
-      keepExistingData: true,
-    });
+    const writableStream = await fileHandle.createWritable();
     await writableStream.write(strData);
     await writableStream.close();
     alert("파일이 저장되었습니다.");
@@ -38,7 +36,6 @@ export default function ActionBtn() {
   };
 
   const handleSaveClick = () => {
-    console.log('sdas',data);
     const dataString = JSON.stringify(data, jsonReplacer, 4);
     const re = new RegExp(`"${beginFloat}(.+?)${endFloat}"`, "g");
     const str = dataString.replace(re, regexReplacer);
