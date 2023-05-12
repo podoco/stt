@@ -19,7 +19,6 @@ export default function Sentence({ number }) {
   const startTime = parseFloat(
     calculateTime(data.transcription.sentences[number].startTime)
   );
-  console.log("start: ", startTime);
   const endTime = parseFloat(
     calculateTime(data.transcription.sentences[number].endTime)
   );
