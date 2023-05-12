@@ -86,8 +86,6 @@ export default function Datagrid({ number }) {
     const lengd = lengds[number];
     const lastsegmentsnumber = data.transcription.segments.length-1;
     //dialect 1 value
-    let previousValue = data.transcription.segments[field][id];
-    alert(previousValue);
 
     //audio 시간, segments 바꾸기
     setData((prevData) => {
@@ -133,8 +131,11 @@ export default function Datagrid({ number }) {
       let sentence ='';
 
       for(let i = dash; i<dash+lengd; i++ ){
-        if (Segmentswords[i][id]===null|| Segmentswords[i][id] === undefined) continue;
-        sentence += Segmentswords[i][id]+' '
+        if (Segmentswords[i][id]===null|| Segmentswords[i][id] === undefined){
+          sentence += Segmentswords[i].dialect + ' '
+        }else{
+          sentence += Segmentswords[i][id]+' '
+        }
       }
        sentences[number] = { ...sentences[number], [id]: sentence };
 
@@ -144,13 +145,17 @@ export default function Datagrid({ number }) {
     });
 
     setData((prevData) => {
+
       const sentences = { ...prevData.transcription };
       const Segmentswords = prevData.transcription.segments;
       let sentence = '';
     
       for (let i = 0; i < Segmentswords.length; i++) {
-        if (Segmentswords[i][id] === null || Segmentswords[i][id] === undefined) continue;
-        sentence += Segmentswords[i][id] + ' ';
+        if (Segmentswords[i][id] === null || Segmentswords[i][id] === undefined){
+          sentence += Segmentswords[i].dialect + ' '
+        }else{
+          sentence += Segmentswords[i][id] + ' ';
+        }
       }
       const updatedTranscription = { ...sentences, [id]: sentence };
       const updatedData = {
@@ -159,11 +164,6 @@ export default function Datagrid({ number }) {
       };
       return updatedData;
     });
-    
-
-    
-    console.log(data);
-
 
 
   };
@@ -311,18 +311,7 @@ export default function Datagrid({ number }) {
       setSelectedCols([...selectedCols, parseInt(colDef.field)]);
     }
   };
-  // 셀에서 떠날때 디버깅
-  const handleCellBlur = (params) => {
-    // console.log(
-    //   "그 전 셀에 있는 것",
-    //   "field:",
-    //   params.field,
-    //   "id:",
-    //   params.id,
-    //   "value:",
-    //   params.value
-    // );
-  };
+
 
   return (
     <Wrapper>
@@ -334,7 +323,7 @@ export default function Datagrid({ number }) {
         cellMode // 셀 선택 모드 활성화
         editable={true}
         onCellEditCommit={handleEditCellChange}
-        onCellBlur={handleCellBlur}
+ 
       />
       <BtnWrapper>
         <AddBtn onClick={() => handleAddColumn(selectionIndex)}>
