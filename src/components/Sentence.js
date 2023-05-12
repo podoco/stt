@@ -7,9 +7,9 @@ import { dataState } from "../store";
 import { intent, emotion } from "../constants";
 
 const calculateTime = (time) => {
-  const seconds = Number(time&&time.split(":")[2]); // 초 추출
-  const minutes = Number(time&&time.split(":")[1]); // 분 추출
-  const hours = Number(time&&time.split(":")[0]); // 시간 추출
+  const seconds = Number(time && time.split(":")[2]); // 초 추출
+  const minutes = Number(time && time.split(":")[1]); // 분 추출
+  const hours = Number(time && time.split(":")[0]); // 시간 추출
   return (hours * 3600 + minutes * 60 + seconds).toFixed(3);
 };
 
@@ -19,6 +19,7 @@ export default function Sentence({ number }) {
   const startTime = parseFloat(
     calculateTime(data.transcription.sentences[number].startTime)
   );
+  console.log("start: ", startTime);
   const endTime = parseFloat(
     calculateTime(data.transcription.sentences[number].endTime)
   );
@@ -39,7 +40,6 @@ export default function Sentence({ number }) {
       return script;
     });
   };
-  
 
   return (
     <List>

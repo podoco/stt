@@ -14,7 +14,7 @@ export default function AudioPlayer({ startTime, endTime }) {
 
   useEffect(() => {
     try {
-      pauseAudio();
+      audioRef.current.pause();
       setPausedTime(0);
     } catch {}
     setCurrentTime(0);
@@ -23,7 +23,9 @@ export default function AudioPlayer({ startTime, endTime }) {
 
   const updateTime = () => {
     if (audioRef.current.currentTime >= endTime) {
-      audioRef.current.pause();
+      try {
+        audioRef.current.pause();
+      } catch {}
       audioRef.current.currentTime = startTime;
     }
     setCurrentTime(audioRef.current.currentTime);
@@ -38,12 +40,6 @@ export default function AudioPlayer({ startTime, endTime }) {
       const currentTime = pausedTime || startTime;
       audioRef.current.currentTime = currentTime;
       audioRef.current.play();
-      audioRef.current.addEventListener("timeupdate", () => {
-        if (audioRef.current.currentTime >= endTime) {
-          audioRef.current.pause();
-          audioRef.current.currentTime = startTime;
-        }
-      });
     }
     requestRef.current = requestAnimationFrame(updateTime);
   };
