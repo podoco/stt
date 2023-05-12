@@ -15,6 +15,7 @@ export default function AudioPlayer({ startTime, endTime }) {
   useEffect(() => {
     try {
       pauseAudio();
+      setPausedTime(0);
     } catch {}
     setCurrentTime(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +49,9 @@ export default function AudioPlayer({ startTime, endTime }) {
   };
 
   const pauseAudio = () => {
-    audioRef.current.pause();
+    try {
+      audioRef.current.pause();
+    } catch {}
     setPausedTime(audioRef.current.currentTime);
     cancelAnimationFrame(requestRef.current);
   };
