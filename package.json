@@ -12,7 +12,6 @@
     "react-dom": "^17.0.0",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
-    "stringify-with-floats": "^2.0.1",
     "styled-components": "^5.3.10",
     "web-vitals": "^2.1.4"
   },

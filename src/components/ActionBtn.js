@@ -6,6 +6,8 @@ import { dataState, dirHandleState } from "../store";
 export default function ActionBtn() {
   const data = useRecoilValue(dataState);
   const [dirHandle, setDirHandle] = useRecoilState(dirHandleState);
+  const beginFloat = "~begin~float~";
+  const endFloat = "~end~float~";
   // const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
@@ -24,9 +26,21 @@ export default function ActionBtn() {
     alert("파일이 저장되었습니다.");
   }
 
+  const regexReplacer = function regexReplacer(match, num) {
+    return num.includes(".") || Number.isNaN(num) ? num : num + ".0";
+  };
+
+  const jsonReplacer = (key, value) => {
+    return typeof value === "number"
+      ? `${beginFloat}${value}${endFloat}`
+      : value;
+  };
+
   const handleSaveClick = () => {
-    const dataString = JSON.stringify(data, null, 4);
-    const blob = new Blob([dataString], { type: "application/json" });
+    const dataString = JSON.stringify(data, jsonReplacer, 4);
+    const re = new RegExp(`"${beginFloat}(.+?)${endFloat}"`, "g");
+    const str = dataString.replace(re, regexReplacer);
+    const blob = new Blob([str], { type: "application/json" });
     saveFile(blob);
   };
 

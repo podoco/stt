@@ -30,7 +30,6 @@ export default function AudioPlayer({ startTime, endTime }) {
   };
 
   const playAudio = () => {
-    console.log("paly");
     audioRef.current.src = audioSrc;
     if (!startTime || !endTime) {
       audioRef.current.play();
@@ -49,7 +48,6 @@ export default function AudioPlayer({ startTime, endTime }) {
   };
 
   const pauseAudio = () => {
-    console.log("ddd");
     audioRef.current.pause();
     setPausedTime(audioRef.current.currentTime);
     cancelAnimationFrame(requestRef.current);
