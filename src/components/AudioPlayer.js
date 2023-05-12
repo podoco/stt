@@ -1,99 +1,98 @@
-import React from 'react';
-import styled from 'styled-components';
-import { faPlay,faPause } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useState, useRef } from "react";
+import styled from "styled-components";
+import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRecoilValue } from "recoil";
+import { audioSrcState } from "../store";
 
-class AudioPlayer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.audioRef = React.createRef();
-    this.state = {
-      pausedTime: null,
-      currentTime:0,
-    };
-    this.playAudio = this.playAudio.bind(this);
-    this.pauseAudio = this.pauseAudio.bind(this);
-  }
+export default function AudioPlayer({ startTime, endTime }) {
+  const [pausedTime, setPausedTime] = useState();
+  const [currentTime, setCurrentTime] = useState();
+  const audioRef = useRef();
+  const requestRef = useRef(0);
+  const audioSrc = useRecoilValue(audioSrcState);
 
-  playAudio() {
-    const { startTime, endTime } = this.props;
-    if (!startTime || !endTime) {
-      this.audioRef.current.play();
-    } else {
-      const currentTime = this.state.pausedTime || startTime;
-      this.audioRef.current.currentTime = currentTime;
-      this.audioRef.current.play();
-      this.audioRef.current.addEventListener("timeupdate", () => {
-        if (this.audioRef.current.currentTime >= endTime) {
-          this.audioRef.current.pause();
-          this.audioRef.current.currentTime = startTime;
-        }
-        this.setState({
-          currentTime: this.audioRef.current.currentTime,
-        });
-      });
+  useEffect(() => {
+    try {
+      pauseAudio();
+    } catch {}
+    setCurrentTime(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioSrc]);
+
+  const updateTime = () => {
+    if (audioRef.current.currentTime >= endTime) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = startTime;
     }
-    this.animationFrame = requestAnimationFrame(this.updateTime);
-  }
-  updateTime = () => {
-    const { startTime, endTime } = this.props;
-
-    if (this.audioRef.current.currentTime >= endTime) {
-      this.audioRef.current.pause();
-      this.audioRef.current.currentTime = startTime;
-    }
-
-    this.setState({
-      currentTime: this.audioRef.current.currentTime,
-    });
-
-    this.animationFrame = requestAnimationFrame(this.updateTime);
+    setCurrentTime(audioRef.current.currentTime);
+    requestRef.current = requestAnimationFrame(updateTime);
   };
 
-  pauseAudio() {
-    this.setState({
-      pausedTime: this.audioRef.current.currentTime,
-    });
-    this.audioRef.current.pause();
-    cancelAnimationFrame(this.animationFrame);
-  }
+  const playAudio = () => {
+    audioRef.current.src = audioSrc;
+    if (!startTime || !endTime) {
+      audioRef.current.play();
+    } else {
+      const currentTime = pausedTime || startTime;
+      audioRef.current.currentTime = currentTime;
+      audioRef.current.play();
+      audioRef.current.addEventListener("timeupdate", () => {
+        if (audioRef.current.currentTime >= endTime) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = startTime;
+        }
+      });
+    }
+    requestRef.current = requestAnimationFrame(updateTime);
+  };
 
-  render() {
-    const { currentTime } = this.state;
-    return (
-      <AudioWrapper>
-        <audio ref={this.audioRef} >
-          <source src="/sample.wav" type="audio/wav" />
-        </audio>
-        <StyledFontAwesomeIcon icon={faPlay} onClick={this.playAudio}/>
-        <StyledFontAwesomeIcon icon={faPause}  onClick={this.pauseAudio} />
-         <Time>{currentTime.toFixed(3)}</Time>
-      </AudioWrapper>
-    );
-  }
+  const pauseAudio = () => {
+    audioRef.current.pause();
+    setPausedTime(audioRef.current.currentTime);
+    cancelAnimationFrame(requestRef.current);
+  };
+
+  return (
+    <AudioWrapper>
+      <StyledFontAwesomeIcon1 icon={faPlay} onClick={playAudio} />
+      <StyledFontAwesomeIcon2 icon={faPause} onClick={pauseAudio} />
+      <Time>{currentTime && currentTime.toFixed(3)}</Time>
+      <audio ref={audioRef} />
+    </AudioWrapper>
+  );
 }
 const AudioWrapper = styled.div`
   display: flex;
-`
-const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
+`;
+const StyledFontAwesomeIcon1 = styled(FontAwesomeIcon)`
   color: white;
   width: 25px;
   height: 15px;
   background: gray;
   padding: 10px;
-  border-radius:10px;
-  margin-left:15px;
-  margin-right:5px;
+  border-radius: 10px;
+  margin-left: 15px;
+  margin-right: 5px;
+  font-size: 20px;
+`;
+const StyledFontAwesomeIcon2 = styled(FontAwesomeIcon)`
+  color: white;
+  width: 25px;
+  height: 15px;
+  background: gray;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: 15px;
+  margin-right: 5px;
   font-size: 20px;
 `;
 const Time = styled.span`
-  width: 80px;
+  width: 100px;
   height: 34px;
-  background-color:white;
-  font-size:26px;
-  margin-left:6px;
+  background-color: white;
+  font-size: 26px;
+  margin-left: 6px;
   padding-left: 8px;
-  border-radius:10px;
-`
-export default AudioPlayer;
-
+  border-radius: 10px;
+`;

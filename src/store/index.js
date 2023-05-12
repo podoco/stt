@@ -15,16 +15,6 @@ export const selectedColsState = atom({
   default: [],
 });
 
-export const columnsState = atom({
-  key: "columns",
-  default: [],
-});
-
-export const rowsState = atom({
-  key: "rows",
-  default: [],
-});
-
 export const selectionIndexState = atom({
   key: "selectionIndex",
   default: 0,
@@ -48,4 +38,9 @@ export const dashsState = atom({
 export const lengdsState = atom({
   key: "lengds",
   default: [],
+});
+
+export const audioSrcState = atom({
+  key: "audioSrc",
+  default: null,
 });

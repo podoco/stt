@@ -16,10 +16,12 @@ const calculateTime = (time) => {
 export default function Sentence({ number }) {
   const [data, setData] = useRecoilState(dataState);
   const intentTitle = data.annotation;
-  const startTime = calculateTime(
-    data.transcription.sentences[number].startTime
+  const startTime = parseFloat(
+    calculateTime(data.transcription.sentences[number].startTime)
   );
-  const endTime = calculateTime(data.transcription.sentences[number].endTime);
+  const endTime = parseFloat(
+    calculateTime(data.transcription.sentences[number].endTime)
+  );
 
   const handleTagTypeChange = (target, prop) => {
     const index = target.options.selectedIndex;
@@ -27,11 +29,17 @@ export default function Sentence({ number }) {
     setData((prevState) => {
       const script = { ...prevState };
       const tags = [...script.annotation[prop]];
-      tags[number].tagType = title;
-      script.annotation = { ...script.annotation, [prop]: tags };
-      return { ...prevState, script };
+      const updatedTags = tags.map((tag, i) => {
+        if (i === number) {
+          return { ...tag, tagType: title };
+        }
+        return tag;
+      });
+      script.annotation = { ...script.annotation, [prop]: updatedTags };
+      return script;
     });
   };
+  
 
   return (
     <List>
