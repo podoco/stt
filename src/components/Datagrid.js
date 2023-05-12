@@ -348,10 +348,6 @@ export default function Datagrid({ number }) {
       return script;
     });
 
-    selectedCols.forEach((index) => {
-      columns[index + 1].cellClassName = "";
-      setColumns([...columns]);
-    });
     setSelectedCols([]);
   };
 
