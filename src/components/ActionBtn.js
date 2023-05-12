@@ -11,7 +11,6 @@ export default function ActionBtn() {
   // const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
-
     if (dirHandle === null) {
       alert("저장 폴더를 먼저 선택해주세요!");
       return;
