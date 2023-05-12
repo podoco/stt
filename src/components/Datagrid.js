@@ -448,7 +448,7 @@ const BtnWrapper = styled.div`
 `;
 
 const AddBtn = styled.div`
-  width: 100px;
+  width: 110px;
   background-color: rgb(239, 239, 239);
   text-align: center;
   padding: 5px;
