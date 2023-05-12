@@ -29,11 +29,17 @@ export default function Sentence({ number }) {
     setData((prevState) => {
       const script = { ...prevState };
       const tags = [...script.annotation[prop]];
-      tags[number].tagType = title;
-      script.annotation = { ...script.annotation, [prop]: tags };
-      return { ...prevState, script };
+      const updatedTags = tags.map((tag, i) => {
+        if (i === number) {
+          return { ...tag, tagType: title };
+        }
+        return tag;
+      });
+      script.annotation = { ...script.annotation, [prop]: updatedTags };
+      return script;
     });
   };
+  
 
   return (
     <List>

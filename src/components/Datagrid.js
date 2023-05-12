@@ -137,10 +137,12 @@ export default function Datagrid({ number }) {
       const Segmentswords = prevData.transcription.segments;
       let sentence = "";
 
-      for (let i = dash; i < dash + lengd; i++) {
-        if (Segmentswords[i][id] === null || Segmentswords[i][id] === undefined)
-          continue;
-        sentence += Segmentswords[i][id] + " ";
+      for(let i = dash; i<dash+lengd; i++ ){
+        if (Segmentswords[i][id]===null|| Segmentswords[i][id] === undefined){
+          sentence += Segmentswords[i].dialect + ' '
+        }else{
+          sentence += Segmentswords[i][id]+' '
+        }
       }
       sentences[number] = { ...sentences[number], [id]: sentence };
 
@@ -150,14 +152,17 @@ export default function Datagrid({ number }) {
     });
 
     setData((prevData) => {
+
       const sentences = { ...prevData.transcription };
       const Segmentswords = prevData.transcription.segments;
       let sentence = "";
 
       for (let i = 0; i < Segmentswords.length; i++) {
-        if (Segmentswords[i][id] === null || Segmentswords[i][id] === undefined)
-          continue;
-        sentence += Segmentswords[i][id] + " ";
+        if (Segmentswords[i][id] === null || Segmentswords[i][id] === undefined){
+          sentence += Segmentswords[i].dialect + ' '
+        }else{
+          sentence += Segmentswords[i][id] + ' ';
+        }
       }
       const updatedTranscription = { ...sentences, [id]: sentence };
       const updatedData = {
@@ -166,6 +171,8 @@ export default function Datagrid({ number }) {
       };
       return updatedData;
     });
+
+
   };
 
   const handleAddColumn = (index) => {
@@ -322,6 +329,7 @@ export default function Datagrid({ number }) {
         cellMode // 셀 선택 모드 활성화
         editable={true}
         onCellEditCommit={handleEditCellChange}
+ 
       />
       <BtnWrapper>
         <AddBtn onClick={() => handleAddColumn(selectionIndex)}>

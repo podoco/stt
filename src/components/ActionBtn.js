@@ -11,6 +11,7 @@ export default function ActionBtn() {
   // const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
+    console.log('sdas',data);
     if (dirHandle === null) {
       alert("저장 폴더를 먼저 선택해주세요!");
       return;
@@ -37,6 +38,7 @@ export default function ActionBtn() {
   };
 
   const handleSaveClick = () => {
+    console.log('sdas',data);
     const dataString = JSON.stringify(data, jsonReplacer, 4);
     const re = new RegExp(`"${beginFloat}(.+?)${endFloat}"`, "g");
     const str = dataString.replace(re, regexReplacer);
