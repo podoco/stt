@@ -183,7 +183,6 @@ const FileList = styled.ul`
 `;
 
 const FileListItem = styled.li`
-  width: 135%;
   cursor: pointer;
   font-size: 20px;
   padding: 10px 5px;
