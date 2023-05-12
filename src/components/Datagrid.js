@@ -84,99 +84,88 @@ export default function Datagrid({ number }) {
     let { id, field, value } = params;
     const dash = dashs[number];
     const lengd = lengds[number];
+    const lastsegmentsnumber = data.transcription.segments.length-1;
     //dialect 1 value
     let previousValue = data.transcription.segments[field][id];
     alert(previousValue);
 
+    //audio 시간, segments 바꾸기
     setData((prevData) => {
       const script = { ...prevData };
       const data = [...script.transcription.segments];
+      let audiostart = {...script.audio.speechStartTime};
+      let audiolast = {...script.audio.speechEndTime};
+      let sentenceStart =[...script.transcription.sentences]
+      let sentenceLast =[...script.transcription.sentences]
 
       if (data[field]) {
+        if((field === '0' && id === 'startTime')){
+          audiostart = value;
+          script.audio = {...script.audio, speechStartTime:audiostart};
+
+          const updateSentenceStart = {...sentenceStart[0], startTime : value};
+          sentenceStart[0] = updateSentenceStart
+          script.transcription = {...script.transcription,sentences: sentenceStart}
+
+        }
+        if((field === String(lastsegmentsnumber) && id === 'endTime')){
+          audiolast = value;
+          script.audio = {...script.audio, speechEndTime:audiolast};
+
+          const updateSentenceLast = {...sentenceStart[number], endTime : value};
+          sentenceLast[number] = updateSentenceLast
+          script.transcription = {...script.transcription, sentences: sentenceLast}
+
+        }
         const updatedSegment = { ...data[field], [id]: value };
         data[field] = updatedSegment;
       }
 
-      script.transcription = { ...script.transcription, segments: data };
+      script.transcription = { ...script.transcription, segments: data};
+      return script ;
+    },);
+
+     // transcription.sentence
+     setData((prevData) => {
+      const script ={...prevData}
+      const sentences = [...script.transcription.sentences];
+      const Segmentswords =prevData.transcription.segments
+      let sentence ='';
+
+      for(let i = dash; i<dash+lengd; i++ ){
+        if (Segmentswords[i][id]===null|| Segmentswords[i][id] === undefined) continue;
+        sentence += Segmentswords[i][id]+' '
+      }
+       sentences[number] = { ...sentences[number], [id]: sentence };
+
+      script.transcription = {...script.transcription, sentences}
+
       return script;
     });
 
-    // transcription.sentence
     setData((prevData) => {
-      const sentences = [...prevData.transcription.sentences];
-      const target = sentences[number];
-      const modifiedTarget = { ...target, [id]: [...target[id]] };
-
-      let currentWord = "";
-      const words = modifiedTarget[id].reduce((result, char, index) => {
-        if (char === " ") {
-          result.push(currentWord);
-          currentWord = "";
-        } else {
-          currentWord += char;
-        }
-
-        // 마지막 문자일 때 단어로 추가
-        if (index === modifiedTarget[id].length - 1 && currentWord !== "") {
-          result.push(currentWord);
-        }
-
-        return result;
-      }, []);
-
-      if (previousValue == null) {
-        previousValue = prevData.transcription.segments[field].dialect;
+      const sentences = { ...prevData.transcription };
+      const Segmentswords = prevData.transcription.segments;
+      let sentence = '';
+    
+      for (let i = 0; i < Segmentswords.length; i++) {
+        if (Segmentswords[i][id] === null || Segmentswords[i][id] === undefined) continue;
+        sentence += Segmentswords[i][id] + ' ';
       }
-
-      console.log("갑시", words);
-
-      field = parseInt(field); //5
-
-      for (let i = field - dash; i < lengd; i++) {
-        if (words[i] === previousValue) {
-          words[i] = value;
-          break;
-        }
-      }
-
-      const updatedSentences = [...sentences];
-      updatedSentences[number] = { ...modifiedTarget, [id]: words.join(" ") };
-
-      return {
+      const updatedTranscription = { ...sentences, [id]: sentence };
+      const updatedData = {
         ...prevData,
-        transcription: {
-          ...prevData.transcription,
-          sentences: updatedSentences,
-        },
+        transcription: updatedTranscription
       };
+      return updatedData;
     });
+    
 
-    //transcription -dialect,pronunciation,standard
-    setData((prevData) => {
-      const sentences = { ...prevData };
-      let target = sentences.transcription[id];
+    
+    console.log(data);
 
-      // target이 undefined인 경우를 처리하기 위해 기본값으로 빈 문자열 할당
-      if (target === undefined) {
-        target = "";
-      }
 
-      const words = target.split(" ");
-      if (previousValue == null) {
-        previousValue = data.transcription.segments[field].dialect;
-      }
-      field = parseInt(field);
-      for (let i = field; i < field + lengd; i++) {
-        console.log(i);
-        if (words[i] === previousValue) {
-          words[i] = value;
-          break;
-        }
-      }
-      target = words.join(" ");
-      sentences.transcription = { ...sentences.transcription, [id]: target };
-      return sentences;
-    });
+
   };
 
   const handleAddColumn = (index) => {
