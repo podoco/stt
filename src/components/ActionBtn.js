@@ -8,7 +8,6 @@ export default function ActionBtn() {
   const [dirHandle, setDirHandle] = useRecoilState(dirHandleState);
   const beginFloat = "~begin~float~";
   const endFloat = "~end~float~";
-  // const [selectedCols, setSelectedCols] = useRecoilState(selectedColsState);
 
   async function saveFile(strData) {
     if (dirHandle === null) {
