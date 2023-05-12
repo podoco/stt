@@ -39,3 +39,8 @@ export const lengdsState = atom({
   key: "lengds",
   default: [],
 });
+
+export const audioSrcState = atom({
+  key: "audioSrc",
+  default: null,
+});

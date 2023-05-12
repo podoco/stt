@@ -7,6 +7,7 @@ import {
   selectedFileIndexState,
   dashsState,
   lengdsState,
+  audioSrcState,
 } from "../store";
 
 export default function File() {
@@ -14,6 +15,7 @@ export default function File() {
   const setSelectedFileIndex = useSetRecoilState(selectedFileIndexState);
   const setDashs = useSetRecoilState(dashsState);
   const setLengds = useSetRecoilState(lengdsState);
+  const setAudioSrc = useSetRecoilState(audioSrcState);
   const files = useRecoilValue(filesState);
   const [prevIndex, setPrevIndex] = useState();
   const fileReader = new FileReader();
@@ -40,6 +42,7 @@ export default function File() {
       setSelectedFileIndex(currentIndex);
       setPrevIndex(currentIndex);
       fileReaderLoad(currentIndex);
+      audioFiletoSrc(currentIndex);
     }
   };
 
@@ -52,6 +55,7 @@ export default function File() {
       setSelectedFileIndex(currentIndex);
       setPrevIndex(currentIndex);
       fileReaderLoad(currentIndex);
+      audioFiletoSrc(currentIndex);
     }
   };
 
@@ -63,6 +67,7 @@ export default function File() {
     setSelectedFileIndex(selectedIndex);
     setPrevIndex(selectedIndex);
     fileReaderLoad(selectedIndex);
+    audioFiletoSrc(selectedIndex);
   };
 
   const fileReaderLoad = (index) => {
@@ -99,11 +104,17 @@ export default function File() {
     setLengds(_lengds);
   };
 
+  const audioFiletoSrc = (index) => {
+    const urlObj = URL.createObjectURL(files[index]["wav"]);
+    setAudioSrc(urlObj);
+  };
+
   useEffect(() => {
     if (files.length !== 0) {
       setSelectedFileIndex(0);
       setPrevIndex(0);
       fileReaderLoad(0);
+      audioFiletoSrc(0);
       let prev = prevIndex ? prevIndex : 0;
       changeSelectedItemStyle(prev, 0);
     }
