@@ -18,9 +18,7 @@ export default function ActionBtn() {
     const fileHandle = await dirHandle.getFileHandle(`${data.fileName}.json`, {
       create: true,
     });
-    const writableStream = await fileHandle.createWritable({
-      keepExistingData: true,
-    });
+    const writableStream = await fileHandle.createWritable();
     await writableStream.write(strData);
     await writableStream.close();
     alert("파일이 저장되었습니다.");

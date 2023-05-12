@@ -89,6 +89,7 @@ export default function Datagrid({ number }) {
 
     //audio 시간, segments 바꾸기
     setData((prevData) => {
+      const _value = value === ""? null : value
       const script = { ...prevData };
       const data = [...script.transcription.segments];
       let audiostart = { ...script.audio.speechStartTime };
@@ -98,8 +99,8 @@ export default function Datagrid({ number }) {
 
       if (data[field]) {
         if (field === "0" && id === "startTime") {
-          audiostart = value;
-          script.audio = { ...script.audio, speechStartTime: audiostart };
+          audiostart = _value;
+          script.audio = { ...script.audio, speechStartTime: audiostart ? audiostart : ""};
 
           const updateSentenceStart = { ...sentenceStart[0], startTime: value };
           sentenceStart[0] = updateSentenceStart;
@@ -109,12 +110,12 @@ export default function Datagrid({ number }) {
           };
         }
         if (field === String(lastsegmentsnumber) && id === "endTime") {
-          audiolast = value;
-          script.audio = { ...script.audio, speechEndTime: audiolast };
+          audiolast = _value;
+          script.audio = { ...script.audio, speechEndTime: audiolast ? audiolast : ""};
 
           const updateSentenceLast = {
             ...sentenceStart[number],
-            endTime: value,
+            endTime: _value,
           };
           sentenceLast[number] = updateSentenceLast;
           script.transcription = {
@@ -122,7 +123,7 @@ export default function Datagrid({ number }) {
             sentences: sentenceLast,
           };
         }
-        const updatedSegment = { ...data[field], [id]: value };
+        const updatedSegment = { ...data[field], [id]: _value };
         data[field] = updatedSegment;
       }
 
@@ -130,48 +131,99 @@ export default function Datagrid({ number }) {
       return script;
     });
 
-    // transcription.sentence
+    // transcription.sentence (dialect, pronunciation, standard)
     setData((prevData) => {
       const script = { ...prevData };
-      const sentences = [...script.transcription.sentences];
-      const Segmentswords = prevData.transcription.segments;
-      let sentence = "";
 
-      for(let i = dash; i<dash+lengd; i++ ){
-        if (Segmentswords[i][id]===null|| Segmentswords[i][id] === undefined){
-          sentence += Segmentswords[i].dialect + ' '
-        }else{
-          sentence += Segmentswords[i][id]+' '
+      const sentences = [...script.transcription.sentences];
+      const segmentsWords = prevData.transcription.segments;
+      
+      const sentence = [];
+      const standard = [];
+      const pronunciation = [];
+      
+      if (id === "dialect") {
+        for(let i = dash; i<dash+lengd; i++ ){
+          if (segmentsWords[i][id] !== null && segmentsWords[i][id] !== undefined){
+            sentence.push(segmentsWords[i].dialect)
+            standard.push(segmentsWords[i].standard? segmentsWords[i].standard : segmentsWords[i].dialect)
+            pronunciation.push(segmentsWords[i].pronunciation? segmentsWords[i].pronunciation : segmentsWords[i].dialect)
+          }
         }
+        sentences[number] = { ...sentences[number], [id]: sentence.join(" "), standard: standard.join(" "), pronunciation: pronunciation.join(" ") };
       }
-      sentences[number] = { ...sentences[number], [id]: sentence };
+      else if (id ==="standard" || id==="pronunciation")
+      {
+        for(let i = dash; i<dash+lengd; i++ ){
+          if (segmentsWords[i][id] === null || segmentsWords[i][id] === undefined){
+            sentence.push(segmentsWords[i].dialect)
+          }
+          else{
+            sentence.push(segmentsWords[i][id])
+          }
+        }
+        sentences[number] = { ...sentences[number], [id]: sentence.join(" ") };
+      }
+      else if(id === "startTime"){
+        sentences[number] = { ...sentences[0], [id]: segmentsWords[0].startTime? segmentsWords[0].startTime:"" };
+      }
+      else if(id ==="endTime"){
+        sentences[number] = { ...sentences[number], [id]: segmentsWords[lastsegmentsnumber].endTime? segmentsWords[lastsegmentsnumber].endTime:"" };
+      }
 
       script.transcription = { ...script.transcription, sentences };
 
       return script;
     });
 
-    setData((prevData) => {
+    if (id === "dialect") {
+        setData((prevData) => {
 
-      const sentences = { ...prevData.transcription };
-      const Segmentswords = prevData.transcription.segments;
-      let sentence = "";
+          const sentences = { ...prevData.transcription };
+          const segmentsWords = prevData.transcription.segments;
+          
+          const sentence = [];
+          const standard = [];
+          const pronunciation = [];
 
-      for (let i = 0; i < Segmentswords.length; i++) {
-        if (Segmentswords[i][id] === null || Segmentswords[i][id] === undefined){
-          sentence += Segmentswords[i].dialect + ' '
-        }else{
-          sentence += Segmentswords[i][id] + ' ';
-        }
-      }
-      const updatedTranscription = { ...sentences, [id]: sentence };
-      const updatedData = {
-        ...prevData,
-        transcription: updatedTranscription,
-      };
-      return updatedData;
-    });
+            for (let i = 0; i < segmentsWords.length; i++) {
+              if (segmentsWords[i][id] !== null && segmentsWords[i][id] !== undefined){
+                sentence.push(segmentsWords[i][id]);
+                standard.push(segmentsWords[i].standard? segmentsWords[i].standard : segmentsWords[i].dialect)
+                pronunciation.push(segmentsWords[i].pronunciation? segmentsWords[i].pronunciation : segmentsWords[i].dialect)
+              }
+            }
+          const updatedTranscription = { ...sentences, [id]: sentence.join(" "), standard: standard.join(" "), pronunciation: pronunciation.join(" ") };
+      
+          const updatedData = {
+            ...prevData,
+            transcription: updatedTranscription,
+          };
+          return updatedData;
+        });
+    }
+    else if (id ==="standard" || id==="pronunciation") {
+      setData((prevData) => {
 
+        const sentences = { ...prevData.transcription };
+        const segmentsWords = prevData.transcription.segments;
+        const sentence = [];
+
+          for (let i = 0; i < segmentsWords.length; i++) {
+            if (segmentsWords[i][id] === null || segmentsWords[i][id] === undefined){
+              sentence.push(segmentsWords[i].dialect)
+            }else{
+              sentence.push(segmentsWords[i][id])
+            }
+          }
+        const updatedTranscription = { ...sentences, [id]: sentence.join(" ") };
+        const updatedData = {
+          ...prevData,
+          transcription: updatedTranscription,
+        };
+        return updatedData;
+      });
+    }
 
   };
 
@@ -295,6 +347,11 @@ export default function Datagrid({ number }) {
       script.transcription = { ...script.transcription, segments: result };
       return script;
     });
+
+    selectedCols.forEach((index) => {
+      columns[index + 1].cellClassName = "";
+      setColumns([...columns]);
+    });
     setSelectedCols([]);
   };
 
@@ -314,7 +371,7 @@ export default function Datagrid({ number }) {
       setSelectedCols([]);
     } else {
       colDef.cellClassName = "selected";
-      if (selectedCols.indexOf(colDef.field) !== -1) return;
+      if (selectedCols.indexOf(parseInt(colDef.field)) !== -1) return;
       setSelectedCols([...selectedCols, parseInt(colDef.field)]);
     }
   };
