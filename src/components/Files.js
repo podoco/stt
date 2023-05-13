@@ -202,7 +202,7 @@ const PrevBtn = styled.button`
   width: 120px;
   height: 76px;
   cursor: pointer;
-  font-size: 28px;
+  font-size: 25px;
   background-color: #444;
   color: white;
   border-radius: 10px;
@@ -211,7 +211,7 @@ const PrevBtn = styled.button`
 const NextBtn = styled.button`
   width: 120px;
   height: 76px;
-  font-size: 28px;
+  font-size: 25px;
   cursor: pointer;
   background-color: #444;
   color: white;
