@@ -11,13 +11,18 @@ export const subjects = [
 ];
 
 export const intent = [
-  { title: "DES", id: 1 },
+  { title: "REP", id: 1 },
   { title: "EXP", id: 2 },
-  { title: "REP", id: 3 },
+  { title: "DES", id: 3 },
+  { title: "INT", id: 4 },
+  { title: "DIR", id: 5 },
+  { title: "PRO", id: 6 },
+  { title: "ETC", id: 7 },
 ];
 
 export const emotion = [
-  { title: "irrelevant", id: 1 },
-  { title: "negative", id: 2 },
-  { title: "positive", id: 3 },
+  { title: "positive", id: 1 },
+  { title: "neutral", id: 2 },
+  { title: "negative", id: 3 },
+  { title: "irrelevant", id: 4 },
 ];
