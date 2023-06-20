@@ -6,23 +6,9 @@ import { useRecoilState } from "recoil";
 import { dataState } from "../store";
 import { intent, emotion } from "../constants";
 
-const calculateTime = (time) => {
-  const seconds = Number(time && time.split(":")[2]); // 초 추출
-  const minutes = Number(time && time.split(":")[1]); // 분 추출
-  const hours = Number(time && time.split(":")[0]); // 시간 추출
-  return (hours * 3600 + minutes * 60 + seconds).toFixed(3);
-};
-
 export default function Sentence({ number }) {
   const [data, setData] = useRecoilState(dataState);
   const intentTitle = data.annotation;
-  const startTime = parseFloat(
-    calculateTime(data.transcription.sentences[number].startTime)
-  );
-  const endTime = parseFloat(
-    calculateTime(data.transcription.sentences[number].endTime)
-  );
-
   const handleTagTypeChange = (target, prop) => {
     const index = target.options.selectedIndex;
     const { title } = prop === "intents" ? intent[index] : emotion[index];
@@ -45,8 +31,7 @@ export default function Sentence({ number }) {
       <Head>
         <span style={{ display: "flex" }}>
           {number}
-          <AudioPlayer startTime={startTime} endTime={endTime} />
-          {/* <Time>{startTime}~{endTime}초</Time> */}
+          <AudioPlayer number={number} />
         </span>
         <Span>
           <label htmlFor="intent-select">Intent:</label>

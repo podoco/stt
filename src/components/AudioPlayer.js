@@ -3,33 +3,51 @@ import styled from "styled-components";
 import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRecoilValue } from "recoil";
-import { audioSrcState } from "../store";
+import { audioSrcState, dataState } from "../store";
 
-export default function AudioPlayer({ startTime, endTime }) {
+const calculateTime = (time) => {
+  const seconds = Number(time && time.split(":")[2]); // 초 추출
+  const minutes = Number(time && time.split(":")[1]); // 분 추출
+  const hours = Number(time && time.split(":")[0]); // 시간 추출
+  return (hours * 3600 + minutes * 60 + seconds).toFixed(3);
+};
+
+export default function AudioPlayer({ number }) {
   const [pausedTime, setPausedTime] = useState();
   const [currentTime, setCurrentTime] = useState();
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
   const audioRef = useRef();
   const requestRef = useRef(0);
   const audioSrc = useRecoilValue(audioSrcState);
+  const data = useRecoilValue(dataState);
 
   useEffect(() => {
-    try {
-      audioRef.current.pause();
-      setPausedTime(0);
-    } catch {}
-    setCurrentTime(0);
+    setStartTime(
+      parseFloat(calculateTime(data.transcription.sentences[number].startTime))
+    );
+    setEndTime(
+      parseFloat(calculateTime(data.transcription.sentences[number].endTime))
+    );
+    audioRef.current.pause();
+    setPausedTime(0);
+    setCurrentTime(
+      parseFloat(calculateTime(data.transcription.sentences[number].startTime))
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audioSrc]);
+  }, [data]);
 
   const updateTime = () => {
     if (audioRef.current.currentTime >= endTime) {
-      try {
-        audioRef.current.pause();
-      } catch {}
+      audioRef.current.pause();
+      cancelAnimationFrame(requestRef.current);
+      setPausedTime(0);
       audioRef.current.currentTime = startTime;
+      setCurrentTime(startTime);
+    } else {
+      setCurrentTime(audioRef.current.currentTime);
+      requestRef.current = requestAnimationFrame(updateTime);
     }
-    setCurrentTime(audioRef.current.currentTime);
-    requestRef.current = requestAnimationFrame(updateTime);
   };
 
   const playAudio = () => {
@@ -45,9 +63,7 @@ export default function AudioPlayer({ startTime, endTime }) {
   };
 
   const pauseAudio = () => {
-    try {
-      audioRef.current.pause();
-    } catch {}
+    audioRef.current.pause();
     setPausedTime(audioRef.current.currentTime);
     cancelAnimationFrame(requestRef.current);
   };
