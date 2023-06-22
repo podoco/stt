@@ -139,7 +139,7 @@ export default function File() {
 
   useEffect(() => {
     if (files.length !== 0) {
-      errors.forEach((file, index) => {
+      files.forEach((file, index) => {
         itemRef.current.childNodes[index].style.backgroundColor =
           "rgb(239, 239, 239)";
       });
