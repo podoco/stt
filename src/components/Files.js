@@ -20,6 +20,7 @@ export default function File() {
   const [prevIndex, setPrevIndex] = useState();
   const fileReader = new FileReader();
   const itemRef = useRef(null);
+  const [errors, setErorrs] = useState([]);
 
   const changeSelectedItemStyle = (prev, current) => {
     let parent = itemRef.current;
@@ -28,7 +29,7 @@ export default function File() {
     if (
       parent !== null &&
       parent.childNodes[prev] &&
-      parent.childNodes[prev].style.backgroundColor !== "rgb(255, 100, 100)"
+      errors.indexOf(prev) === -1
     )
       parent.childNodes[prev].style.backgroundColor = "rgb(239, 239, 239)";
   };
@@ -41,10 +42,13 @@ export default function File() {
   };
 
   const handlePrevClick = () => {
-    if (prevIndex !== 0) {
-      // 스타일 변경
-
-      const currentIndex = prevIndex - 1;
+    let currentIndex = prevIndex;
+    while (true) {
+      currentIndex -= 1;
+      if (errors.indexOf(currentIndex) === -1) break;
+    }
+    if (0 <= currentIndex) {
+      setPrevIndex(currentIndex);
       changeSelectedItemStyle(prevIndex, currentIndex);
       setSelectedFileIndex(currentIndex);
       setPrevIndex(currentIndex);
@@ -54,9 +58,13 @@ export default function File() {
   };
 
   const handleNextClick = () => {
-    if (prevIndex < files.length - 1) {
-      // 스타일 변경
-      const currentIndex = prevIndex + 1;
+    let currentIndex = prevIndex;
+    while (true) {
+      currentIndex += 1;
+      if (errors.indexOf(currentIndex) === -1) break;
+    }
+    if (currentIndex < files.length) {
+      setPrevIndex(currentIndex);
       changeSelectedItemStyle(prevIndex, currentIndex);
       setSelectedFileIndex(currentIndex);
       setPrevIndex(currentIndex);
@@ -66,14 +74,12 @@ export default function File() {
   };
 
   const handleFileClick = (event) => {
-    if (
-      event.target.parentNode.childNodes[prevIndex].style.backgroundColor !==
-      "rgb(255, 100, 100)"
-    )
+    let selectedIndex = parseInt(event.target.getAttribute("data-key"));
+    if (errors.indexOf(selectedIndex) !== -1) return 0;
+    if (errors.indexOf(prevIndex) === -1)
       event.target.parentNode.childNodes[prevIndex].style.backgroundColor =
         "rgb(239, 239, 239)";
     event.target.style.backgroundColor = "rgb(220, 220, 220)";
-    let selectedIndex = parseInt(event.target.getAttribute("data-key"));
     setSelectedFileIndex(selectedIndex);
     setPrevIndex(selectedIndex);
     fileReaderLoad(selectedIndex);
@@ -92,8 +98,9 @@ export default function File() {
         setData(loadData);
       else {
         alert(
-          `json 파일 내용을 확인해주세요. \n(intents, emotions, grammarTypes가 비어있습니다) \n 파일명: ${loadData.fileName}`
+          `json 파일 내용을 확인해주세요. \n(intents, emotions, grammarTypes) \n 파일명: ${loadData.fileName}`
         );
+        setErorrs([...errors, index]);
         changeErrorItemStyle(index);
       }
     });
@@ -132,6 +139,11 @@ export default function File() {
 
   useEffect(() => {
     if (files.length !== 0) {
+      errors.forEach((file, index) => {
+        itemRef.current.childNodes[index].style.backgroundColor =
+          "rgb(239, 239, 239)";
+      });
+      setErorrs([]);
       setSelectedFileIndex(0);
       setPrevIndex(0);
       fileReaderLoad(0);
