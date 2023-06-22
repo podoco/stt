@@ -23,13 +23,20 @@ export default function File() {
 
   const changeSelectedItemStyle = (prev, current) => {
     let parent = itemRef.current;
+    if (parent !== null && parent.childNodes[current])
+      parent.childNodes[current].style.backgroundColor = "rgb(220, 220, 220)";
     if (
       parent !== null &&
-      parent.childNodes[prev] !== undefined &&
-      parent.childNodes[current]
-    ) {
+      parent.childNodes[prev] &&
+      parent.childNodes[prev].style.backgroundColor !== "rgb(255, 100, 100)"
+    )
       parent.childNodes[prev].style.backgroundColor = "rgb(239, 239, 239)";
-      parent.childNodes[current].style.backgroundColor = "rgb(220, 220, 220)";
+  };
+
+  const changeErrorItemStyle = (current) => {
+    let parent = itemRef.current;
+    if (parent !== null && parent.childNodes[current]) {
+      parent.childNodes[current].style.backgroundColor = "rgb(255, 100, 100)";
     }
   };
 
@@ -49,7 +56,6 @@ export default function File() {
   const handleNextClick = () => {
     if (prevIndex < files.length - 1) {
       // 스타일 변경
-
       const currentIndex = prevIndex + 1;
       changeSelectedItemStyle(prevIndex, currentIndex);
       setSelectedFileIndex(currentIndex);
@@ -60,8 +66,12 @@ export default function File() {
   };
 
   const handleFileClick = (event) => {
-    event.target.parentNode.childNodes[prevIndex].style.backgroundColor =
-      "rgb(239, 239, 239)";
+    if (
+      event.target.parentNode.childNodes[prevIndex].style.backgroundColor !==
+      "rgb(255, 100, 100)"
+    )
+      event.target.parentNode.childNodes[prevIndex].style.backgroundColor =
+        "rgb(239, 239, 239)";
     event.target.style.backgroundColor = "rgb(220, 220, 220)";
     let selectedIndex = parseInt(event.target.getAttribute("data-key"));
     setSelectedFileIndex(selectedIndex);
@@ -74,7 +84,18 @@ export default function File() {
     fileReader.addEventListener("load", (e) => {
       let loadData = JSON.parse(fileReader.result);
       initDashPoint(loadData);
-      setData(loadData);
+      if (
+        loadData.annotation.intents.length !== 0 &&
+        loadData.annotation.emotions.length !== 0 &&
+        loadData.annotation.grammarTypes !== 0
+      )
+        setData(loadData);
+      else {
+        alert(
+          `json 파일 내용을 확인해주세요. \n(intents, emotions, grammarTypes가 비어있습니다) \n 파일명: ${loadData.fileName}`
+        );
+        changeErrorItemStyle(index);
+      }
     });
     fileReader.readAsText(files[index]["json"]);
   };
