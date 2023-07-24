@@ -1,5 +1,6 @@
 # Json파일 수정 가능한 Tool
-![스크린샷 2023-06-21 오후 4 11 35](https://github.com/podoco/stt/assets/103816228/7749dfed-2e09-4c72-9cb1-5d2b13b4a444)
+![스크린샷 2023-07-24 오전 10 30 32](https://github.com/podoco/stt/assets/103816228/f44b008f-3809-4556-820a-2de06e82ec46)
+
 
 # 배포주소
 https://stt-flame.vercel.app/
